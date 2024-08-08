@@ -1,5 +1,8 @@
 package sokoban
 
+import "core:fmt"
+import "core:strings"
+import "core:strconv"
 import rl   "vendor:raylib"
 
 
@@ -15,6 +18,17 @@ World :: struct {
 	width:   i32,
 	height:  i32,
 	tiles:   []Tile,
+
+}
+
+Puzzle :: struct {
+	title: cstring,
+	tiles: []u8,
+	width: i32,
+	height: i32,
+	probably_unwinnable: bool,
+
+	worldOrigin: Coord,
 }
 
 Cell :: struct { 
@@ -27,30 +41,21 @@ Coord :: struct {
 	y: i32,
 }
 
-Tilemap :: struct {
-	texture: rl.Texture2D,
-	tileWidth: f32,
-	tileHeight: f32,
-	margin: f32,
-	gutter: f32,
-	tileCoords: []rl.Vector2
-}
 
 Game :: struct {
 	pause:		bool,
-	colors:		[]rl.Color,
-	baseLayerRects:		[]rl.Rectangle,
-	objectLayerRects:	[]rl.Rectangle,
 	width:		i32,
 	height:		i32,
 	state:		GameState,
 	puzzle_index: int,
 	moves: int,
+
 }
 
 GameState :: enum {
+	SetSelect,
 	Gameplay,
-	You_Win,
+	YouWin,
 }
 
 Player :: struct {
@@ -95,41 +100,16 @@ User_Input :: struct {
 	next_level: bool,
 	prev_level: bool,
 	advance: bool,
-}
 
-Tile :: enum {
-	Void,
-	Wall,
-	Player,
-	PlayerOnGoal,
-	Box,
-	BoxOnGoal,
-	Goal,
-	Floor,
+	zoom_in: bool,
+	zoom_out: bool,
 }
 
 
 
-draw_world_colors :: #force_inline proc(world: ^World, cell:Cell, colors: []rl.Color) {
-	x, y : i32
-	for y = 0; y < world.height; y += 1 {
-		for x = 0; x < world.width; x += 1 {
-			index := y * world.width + x
-			color := colors[world.tiles[index]]
-
-			rect := rl.Rectangle {
-				x = f32(x) * cell.width,
-				y = f32(y) * cell.height,
-				width = cell.width,
-				height = cell.height,
-			}
-			rl.DrawRectangleRec(rect, color)
-		}
-	}
-}
 
 
-draw_world_tiles :: #force_inline proc(world: ^World, tilemap: rl.Texture2D, cell:Cell, rects: []rl.Rectangle, player: Player, processPlayer: bool) {
+draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, rects: []rl.Rectangle, player: Player, processPlayer: bool) {
 	x, y : i32
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
@@ -143,27 +123,15 @@ draw_world_tiles :: #force_inline proc(world: ^World, tilemap: rl.Texture2D, cel
 			}
 
 			dest_rect := rl.Rectangle {
-				x = f32(x) * cell.width,
-				y = f32(y) * cell.height,
-				width = cell.width,
-				height = cell.height,
+				f32(x) * tilemap.w,
+				f32(y) * tilemap.h,
+				tilemap.w,
+				tilemap.h,
 			}
-			rl.DrawTexturePro(tilemap, source_rect, dest_rect, {cell.width/2,cell.height/2}, rotation, rl.WHITE)
+			rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, rl.WHITE)
 		}
 	}
 }
-
-
-update_world :: #force_inline proc(world: ^World, next_world: ^World) {
-	x, y : i32
-	for y = 0; y < world.height; y += 1 {
-		for x = 0; x < world.width; x += 1 {
-			// index := y * world.width + x
-		}
-	}
-}
-
-
 
 
 
@@ -186,25 +154,29 @@ measure_puzzle :: #force_inline proc(puzzle: ^Puzzle) {
 	puzzle.height = height - 1
 }
 
-set_puzzle :: #force_inline proc(puzzle: ^Puzzle, world: ^World, next_world: ^World, player: ^Player) {
+set_puzzle :: #force_inline proc(_puzzle: Puzzle, world: ^World, next_world: ^World, player: ^Player) -> Puzzle {
+
+	puzzle := _puzzle
 
 	for tile, index in next_world.tiles {
 		next_world.tiles[index] = Tile.Void
 	}
 
 	x, y : i32
-	origin_x, origin_y : i32
-	origin_x = (world.width - puzzle.width) / 2
-	origin_y = (world.height - puzzle.height) / 2
-	x, y = origin_x, origin_y
+	puzzle.worldOrigin = { (world.width - puzzle.width) / 2, (world.height - puzzle.height) / 2 }
+	initX, initY := puzzle.worldOrigin.x, puzzle.worldOrigin.y
+	x, y = initX, initY
 
 	encountered_tile_on_row := false
+
+	boxes := 0
+	goals := 0
 
 	for tile in puzzle.tiles {
 		switch tile {
 			case '\n', '|':
 				y += 1
-				x = origin_x
+				x = initX
 				encountered_tile_on_row = false
 			case '-','_':
 				next_world.tiles[y * world.width + x] = Tile.Void
@@ -223,18 +195,23 @@ set_puzzle :: #force_inline proc(puzzle: ^Puzzle, world: ^World, next_world: ^Wo
 				next_world.tiles[y * world.width + x] = Tile.PlayerOnGoal
 				encountered_tile_on_row = true
 				x += 1
+				goals += 1
 			case '$':
 				next_world.tiles[y * world.width + x] = Tile.Box
 				encountered_tile_on_row = true
 				x += 1
+				boxes += 1
 			case '*':
 				next_world.tiles[y * world.width + x] = Tile.BoxOnGoal
 				encountered_tile_on_row = true
 				x += 1
+				boxes += 1
+				goals += 1
 			case '.':
 				next_world.tiles[y * world.width + x] = Tile.Goal
 				encountered_tile_on_row = true
 				x += 1
+				goals += 1
 			case ' ':
 				if (encountered_tile_on_row) {
 					next_world.tiles[y * world.width + x] = Tile.Floor
@@ -245,6 +222,12 @@ set_puzzle :: #force_inline proc(puzzle: ^Puzzle, world: ^World, next_world: ^Wo
 				x += 1
 		}
 	}
+
+	if (boxes != goals) {
+		puzzle.probably_unwinnable = true
+	}
+
+	return puzzle
 }
 
 check_for_win :: proc(world: World) -> bool {
@@ -273,15 +256,6 @@ check_for_win :: proc(world: World) -> bool {
 	return false
 }
 
-RectFromCoord :: proc(coord: rl.Vector2, tilemap:Tilemap) -> rl.Rectangle {
-	using tilemap
-	return {
-		gutter + coord.x * (tileWidth + gutter),
-		gutter + coord.y * (tileHeight + gutter),
-		tileWidth,
-		tileHeight
-	}
-}
 
 process_user_input :: proc(user_input: ^User_Input, window: Window, world: World) {
 	user_input^ = User_Input {
@@ -297,31 +271,40 @@ process_user_input :: proc(user_input: ^User_Input, window: Window, world: World
 		next_level	= rl.IsKeyPressed(.RIGHT_BRACKET),
 		prev_level	= rl.IsKeyPressed(.LEFT_BRACKET),
 		advance 	= rl.IsKeyPressed(.SPACE),
+
+		zoom_in 	= rl.IsKeyPressed(.EQUAL),
+		zoom_out 	= rl.IsKeyPressed(.MINUS)
 	}
 }
 
 main :: proc() {
 	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{ }}
 
+	rl.InitWindow(window.width, window.height, window.name)
+	rl.SetWindowState( window.control_flags )
+	rl.SetTargetFPS(window.fps)
+
+	puzzle_file := read_puzzle_file("./levels/Microban.txt")
+
+	puzzleSet := puzzle_file.puzzles
+
+	// puzzleSet : []Puzzle = {
+	// 	readPuzzleString(simplestpuzzle, "simplest possible sokoban"),
+	// 	readPuzzleString(claire, "Claire, by Lee J Haywood"),
+	// 	readPuzzleString(coffeepuzzle, "coffe sokoban"),
+	// 	readPuzzleString(courtyard, "courtyard")
+	// }
+
+
 	game := Game {
 		pause     = true,
-		colors    = []rl.Color { 
-			rl.BLACK,		//void				0
-			rl.RAYWHITE,	//Wall				#
-			rl.GREEN,		//Player			@
-			rl.DARKGREEN,	//Player on goal	+
-			rl.BEIGE,		//Box				$
-			rl.BROWN,		//Box on goal		*
-			rl.DARKGRAY,	//Goal square		.
-			rl.LIGHTGRAY,	//Floor				(space)
-		},
-		width     = 32,
-		height    = 32,
+		width     = 64,
+		height    = 64,
+		state = .Gameplay
 	}
 
 	world			:= World{game.width, game.height, make([]Tile, game.width * game.height)}
 	next_world		:= World{game.width, game.height, make([]Tile, game.width * game.height)}
-	initial_world	:= World{game.width, game.height, make([]Tile, game.width * game.height)}
 
 	defer delete(world.tiles)
 	defer delete(next_world.tiles)
@@ -331,26 +314,12 @@ main :: proc() {
 	initial_player : Player
 	player : Player
 
-
-	puzzleSet : []Puzzle = {
-		readPuzzleString(simplestpuzzle, "simplest possible sokoban"),
-		readPuzzleString(claire, "Claire, by Lee J Haywood"),
-		readPuzzleString(coffeepuzzle, "coffe sokoban"),
-		readPuzzleString(courtyard, "courtyard")
-	}
-
-
+	
 
 	
 
-	camera : rl.Camera2D
 
-
-	rl.InitWindow(window.width, window.height, window.name)
-	rl.SetWindowState( window.control_flags )
-	rl.SetTargetFPS(window.fps)
-
-	set_puzzle(&puzzleSet[game.puzzle_index], &world, &next_world, &player)
+	puzzle := set_puzzle(puzzleSet[game.puzzle_index], &world, &next_world, &player)
 	world, next_world = next_world, world
 	rl.SetWindowTitle(puzzleSet[game.puzzle_index].title)
 
@@ -378,7 +347,7 @@ main :: proc() {
 	}
 
 	sokobanPerfect := Tilemap {
-		rl.LoadTexture("./tilesets/SokobanPerfect.png"),
+		rl.LoadTexture("./tilesets/Sokoban Perfect.png"),
 		40, 54,
 		4, 4,
 		{
@@ -401,68 +370,46 @@ main :: proc() {
 
 	tilemap := shoveIt
 
-	cell := Cell {
-		width  = tilemap.tileWidth,
-		height = tilemap.tileHeight,
-	}
-
-	camera.target = {f32(world.width)/2 * cell.width,f32(world.height)/2 * cell.height}
+	camera : rl.Camera2D
+	camera.target = {f32(world.width)/ 2.0 * tilemap.w,f32(world.height)/2 * tilemap.h}
 	camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
 	camera.zoom = 2.0
 
-	game.baseLayerRects = []rl.Rectangle {
-		RectFromCoord(tilemap.tileCoords[0], tilemap), //void
-		RectFromCoord(tilemap.tileCoords[1], tilemap), //wall
-		RectFromCoord(tilemap.tileCoords[7], tilemap), //player, draw floor
-		RectFromCoord(tilemap.tileCoords[6], tilemap), //player on goal, draw goal
-		RectFromCoord(tilemap.tileCoords[7], tilemap), //box, draw floor
-		RectFromCoord(tilemap.tileCoords[6], tilemap), //boxongoal, draw goal
-		RectFromCoord(tilemap.tileCoords[6], tilemap), //goal
-		RectFromCoord(tilemap.tileCoords[7], tilemap), //floor
-		{},
-		{},
-		{},
-		{},
-		{},
-		{},
-	}
 
-	game.objectLayerRects = []rl.Rectangle {
-		{}, //void
-		{}, //wall
-		RectFromCoord(tilemap.tileCoords[2], tilemap), //player
-		RectFromCoord(tilemap.tileCoords[3], tilemap), //player on goal
-		RectFromCoord(tilemap.tileCoords[4], tilemap), //box
-		RectFromCoord(tilemap.tileCoords[5], tilemap), //boxongoal
-		{}, //goal
-		{}, //floor
-		RectFromCoord(tilemap.tileCoords[8], tilemap), //resting
-		RectFromCoord(tilemap.tileCoords[9], tilemap), //walking
-		RectFromCoord(tilemap.tileCoords[10], tilemap), //pushing
-		RectFromCoord(tilemap.tileCoords[11], tilemap), //walkingOdd
-		RectFromCoord(tilemap.tileCoords[12], tilemap), //pushingEven
-		RectFromCoord(tilemap.tileCoords[13], tilemap), //pushingOdd
-	}
+
+	tilerenderer := SetTileRenderer(tilemap, {})
 
 	rest_timer: f32
+	hud_timer: f32
+
+	show_hud_message: bool
 
 	for !rl.WindowShouldClose() {
 		using game
 
-		rest_timer += rl.GetFrameTime()
-		if(rest_timer > 1) {
-			player.state = .resting
-		}
+		process_user_input(&user_input, window, world)
 
 		
+		if player.state != .resting {
+			rest_timer += rl.GetFrameTime()
+			if(rest_timer >= 1) {
+				player.state = .resting
+			}
+		}
+		
 
-		process_user_input(&user_input, window, world)
+		if(show_hud_message) {
+			hud_timer += rl.GetFrameTime()
+			if(hud_timer >= 1) {
+				show_hud_message = false
+			}
+		}
+
 
 		front := player
 		leap := player
 
 		if (state == GameState.Gameplay) {
-
 
 			if user_input.left {
 				front.x -= 1
@@ -488,9 +435,19 @@ main :: proc() {
 				player.direction = .down
 				front.direction = .down
 			}
+
+			if user_input.zoom_in {
+				if(camera.zoom < 0.5) do camera.zoom = 0
+				camera.zoom = clamp(camera.zoom + 0.5, 0.50, 10)
+				hud_timer = 0
+				show_hud_message = true
+			}
+			if user_input.zoom_out {
+				camera.zoom = clamp(camera.zoom - 0.5, 0.25, 10)
+				hud_timer = 0
+				show_hud_message = true
+			}
 		}
-
-
 
 
 		if (player != front) {
@@ -549,7 +506,7 @@ main :: proc() {
 					case Tile.Goal:
 						world.tiles[leap.y * world.width + leap.x] = Tile.BoxOnGoal
 						if check_for_win(world) {
-							state = .You_Win
+							state = .YouWin
 						}
 				}
 				if moves % 2 == 0 {
@@ -564,7 +521,7 @@ main :: proc() {
 		}
 
 		next_index := game.puzzle_index
-		if user_input.next_level || (user_input.advance && state == .You_Win) {
+		if user_input.next_level || (user_input.advance && state == .YouWin) {
 			next_index = (next_index + 1) %% len(puzzleSet)
 		}
 		if user_input.prev_level {
@@ -572,32 +529,75 @@ main :: proc() {
 		}
 		if (next_index != game.puzzle_index || user_input.reset) {
 			game.puzzle_index = next_index
-			set_puzzle(&puzzleSet[game.puzzle_index], &world, &next_world, &player)
+			puzzle = set_puzzle(puzzleSet[game.puzzle_index], &world, &next_world, &player)
 			world, next_world = next_world, world
 			rl.SetWindowTitle(puzzleSet[game.puzzle_index].title)
 			state = .Gameplay
 		}
 
+		//move camera
+		{
+			world_center : rl.Vector2 = {f32(world.width)/2, f32(world.height)/2}
+			if puzzle.width % 2 != 0 {
+				world_center.x -= 0.5
+			}
+			if puzzle.height % 2 == 0 {
+				world_center.y += 0.5
+			}
 
+			if f32(window.width) > f32(puzzle.width + 2) * tilemap.w * camera.zoom {
+				camera.target.x = world_center.x * tilemap.w
+			} else {
+				playerX:f32 = (f32(player.x) + 0.5) * tilemap.w
+				minX:f32 = (f32(puzzle.worldOrigin.x) - 1.5) * tilemap.w + (camera.offset.x / camera.zoom)
+				maxX:f32 = (f32(puzzle.worldOrigin.x + puzzle.width + 1) + 0.5) * tilemap.w - (camera.offset.x / camera.zoom)
+				camera.target.x = clamp(playerX, minX, maxX)
+			}
+			if f32(window.height) > f32(puzzle.height + 2) * tilemap.h * camera.zoom {
+				camera.target.y = world_center.y * tilemap.h
+			} else {
+				playerY:f32 = (f32(player.y) + 0.5) * tilemap.h
+				minY:f32 = (f32(puzzle.worldOrigin.y) - 1.5) * tilemap.h + (camera.offset.y / camera.zoom)
+				maxY:f32 = (f32(puzzle.worldOrigin.y + puzzle.height) + 2.5) * tilemap.h - (camera.offset.y / camera.zoom)
+				camera.target.y = clamp(playerY, minY, maxY)
+			}
+		}
 
 		rl.BeginDrawing()
 			rl.ClearBackground(rl.PINK)
 
+
 			rl.BeginMode2D(camera)
-		    	draw_world_tiles(&world, tilemap.texture, cell, baseLayerRects, player, false)
-		    	draw_world_tiles(&world, tilemap.texture, cell, objectLayerRects, player, true)
+		    	draw_world_tiles(&world, tilemap, tilerenderer.baseLayerRects, player, false)
+		    	draw_world_tiles(&world, tilemap, tilerenderer.objectLayerRects, player, true)
 		    rl.EndMode2D()
 
-		    if state == GameState.You_Win {
-		    	rl.DrawText("you win!", 96, 96, 48, rl.GREEN)
+		    if state == GameState.YouWin {
+		    	rl.DrawText(YouWinMessage, 94, 94, 30, rl.BLACK)
+		    	rl.DrawText(YouWinMessage, 96, 96, 30, rl.GREEN)
 		    }
-		    // rl.DrawTexture(tilemap, 0,0,rl.WHITE)
+		    if puzzleSet[game.puzzle_index].probably_unwinnable {
+		    	rl.DrawText(UnsolvableMessage, 22, window.height - 50, 30, rl.BLACK)
+		    	rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
+		    }
+
+		    if show_hud_message {
+		    	buf: [64]u8 = ---
+		    	ss : []string = {
+		    		"zoom: ",
+		    		strconv.itoa(buf[:], int(camera.zoom * 100) )
+		    	}
+		    	hud_message := strings.clone_to_cstring(strings.concatenate(ss[:]))
+				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
+		    }
+			
 		rl.EndDrawing()
 	}
 }
 
 
-
+YouWinMessage :: "Solved it! Try the next one?"
+UnsolvableMessage :: "this puzzle is unsolvable... press ] to skip"
 
 
 
