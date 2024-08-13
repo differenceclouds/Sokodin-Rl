@@ -1,5 +1,7 @@
 package sokoban
 
+//using parser over these, leaving for posterity
+
 simplestpuzzle ::
 `#####
 #@$.#

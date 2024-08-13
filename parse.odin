@@ -6,14 +6,19 @@ import "core:fmt"
 import "core:strconv"
 
 
-File :: struct {
+// PreSet :: struct {
+// 	title: string,
+// 	notes: 
+// }
+
+Set :: struct {
 	title: string,
 	notes: [dynamic]string,
 	puzzles: [dynamic]Puzzle,
 }
 
-InvalidFile: File = {
-	title = "invalid puzzle file"
+InvalidFile: Set = {
+	title = "invalid puzzle set file"
 }
 
 PrePuzzle :: struct {
@@ -36,7 +41,7 @@ ParsingState :: enum {
 	puzzleRead,
 }
 
-read_puzzle_file :: proc(filepath: string) -> File {
+read_puzzle_file :: proc(filepath: string) -> Set {
     text, ok := os.read_entire_file(filepath)
     if !ok {
         panic("Unable to read data.txt")
@@ -49,12 +54,12 @@ read_puzzle_file :: proc(filepath: string) -> File {
     }
 
 
-	file : File = {}
+	set : Set = {}
 	
 	{
 		titlepath := strings.trim_right(filepath, ".txt")
 		ss := strings.split(titlepath, "/")
-		file.title = ss[len(ss) - 1]
+		set.title = ss[len(ss) - 1]
 	}
 
 
@@ -65,10 +70,6 @@ read_puzzle_file :: proc(filepath: string) -> File {
 	puzzle_index : int = 1
 
 	for line in strings.split_lines_after_iterator(&it) {
-		// if strings.has_prefix(line, `;`) {
-		// 	fmt.println(line)
-		// }
-
 		if check_prefixes(line, puzzle_title_prefixes) {
 			state = .puzzleInit
 		} else if check_prefixes(line, puzzle_line_prefixes) {
@@ -78,7 +79,8 @@ read_puzzle_file :: proc(filepath: string) -> File {
 		switch(state) {
 			case .notes:
 				if strings.has_prefix(line, ";") {
-					append(&file.notes, line)
+					trim := strings.trim_left(line, "; ")
+					append(&set.notes, trim)
 				} else {
 					state = .puzzleInit
 				}
@@ -86,12 +88,12 @@ read_puzzle_file :: proc(filepath: string) -> File {
 				if check_prefixes(line, puzzle_title_prefixes) {
 					holdingPuzzle.title = line
 				}
-				holdingPuzzle.set_title = file.title
+				holdingPuzzle.set_title = set.title
 				buf: [64]u8 = ---
 				holdingPuzzle.set_index = strconv.itoa(buf[:], puzzle_index)
 			case .puzzleRead:
 				if line == "\n" {
-					append(&file.puzzles, puzzle_from_prepuzzle(holdingPuzzle))
+					append(&set.puzzles, puzzle_from_prepuzzle(holdingPuzzle))
 					puzzle_index += 1
 					holdingPuzzle = PrePuzzle {}
 					state = .puzzleInit
@@ -102,7 +104,7 @@ read_puzzle_file :: proc(filepath: string) -> File {
 		}
 
 	}
-	return file
+	return set
 }
 
 puzzle_line_prefixes: []string = {
@@ -116,8 +118,15 @@ puzzle_title_prefixes: []string = {
 puzzle_from_prepuzzle :: proc(pre: PrePuzzle) -> Puzzle {
 	combine: string = strings.join(pre.lines[:], "\n")
 	titlebaritems := [?]string {pre.set_title, " #", pre.set_index, "  ", pre.title }
-	title: string = strings.concatenate(titlebaritems[:])
-	return readPuzzleString(combine, strings.clone_to_cstring(title))
+	titlebar: string = strings.concatenate(titlebaritems[:])
+	// return readPuzzleString(combine, strings.clone_to_cstring(title))
+	puzzle: Puzzle = {
+		title = strings.clone_to_cstring(pre.title),
+		title_bar = strings.clone_to_cstring(titlebar),
+		tiles = transmute([]u8)string(combine)
+	}
+	measure_puzzle(&puzzle)
+	return puzzle
 }
 
 check_prefixes :: proc(line: string, prefixes: []string) -> bool {
@@ -130,14 +139,14 @@ check_prefixes :: proc(line: string, prefixes: []string) -> bool {
 }
 
 
-readPuzzleString :: proc(puzzlestring: string, _title: cstring) -> Puzzle {
-	puzzle: Puzzle = {
-		title = _title,
-		tiles = transmute([]u8)string(puzzlestring)
-	}
-	measure_puzzle(&puzzle)
-	return puzzle
-}
+// readPuzzleString :: proc(puzzlestring: string, _title: cstring) -> Puzzle {
+// 	puzzle: Puzzle = {
+// 		title = _title,
+// 		tiles = transmute([]u8)string(puzzlestring)
+// 	}
+// 	measure_puzzle(&puzzle)
+// 	return puzzle
+// }
 
 
 readNotes :: proc() -> string {

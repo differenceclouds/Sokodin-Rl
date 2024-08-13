@@ -131,6 +131,7 @@ TileRendererOptions :: struct {
 	disableVoidTile: bool,
 	floorTileAsVoid: bool,
 	renderBackgroundImage: bool,
+	fixedPlayerRotation: bool,
 }
 
 
