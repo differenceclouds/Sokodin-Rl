@@ -7,11 +7,13 @@ import rl "vendor:raylib"
 
 
 Window :: struct { 
-	name:          cstring,
+	title:          cstring,
 	width:         i32, 
 	height:        i32,
 	fps:           i32,
 	control_flags: rl.ConfigFlags,
+
+	resize_flag: bool,
 }
 
 World :: struct {
@@ -50,7 +52,6 @@ Game :: struct {
 	state:		GameState,
 	puzzle_index: int,
 	moveCount: int,
-
 }
 
 GameState :: enum {
@@ -111,18 +112,51 @@ User_Input :: struct {
 
 
 
-draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, options: TileRendererOptions, rects: []rl.Rectangle, player: Player, processPlayer: bool) {
+draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
 	x, y : i32
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
+			
 			index := y * world.width + x
+			tileType := world.tiles[index]
 			source_rect := rects[world.tiles[index]]
 
 			rotation:f32 = 0
-			if processPlayer && (world.tiles[index] == Tile.Player || world.tiles[index] == Tile.PlayerOnGoal) {
-				source_rect = rects[8 + int(player.state)]
-				if !options.fixedPlayerRotation do rotation += f32(player.direction) * 90
+
+
+			
+			if processPlayer && (tileType == .Player || tileType == .PlayerOnGoal) {
+				switch tilemap.options.playerTileStyle {
+					case .TwoTile:
+					case .SingleTile: 
+					case .FourTileDirectional: 
+					case .EightTileDirectional:
+						restingPose: bool
+						if tilemap.options.defaultPlayerOnRest && player.state == .resting {
+							restingPose = true
+						}
+						if !restingPose {
+							if tileType == .Player {
+								source_rect = rects[14 + int(player.direction)]
+							} else if tileType == .PlayerOnGoal {
+								source_rect = rects[18 + int(player.direction)]
+							}
+						}
+
+					case .SingleDirectionWithPoses: 
+						source_rect = rects[8 + int(player.state)]
+					case .TwoDirectionWithPoses, .FourDirectionWithPoses:
+						source_rect = rects[22 + 6 * int(player.direction) + int(player.state)]
+
+				}
+				if !tilemap.options.fixedPlayerRotation do rotation += f32(player.direction) * 90
+
+				if tilemap.options.mirrorPlayerSprites {
+					if player.direction == .left do source_rect.width *= -1
+					else if player.direction == .down do source_rect.height *= -1
+				}
 			}
+
 
 			dest_rect := rl.Rectangle {
 				f32(x) * tilemap.w,
@@ -130,11 +164,47 @@ draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, options:
 				tilemap.w,
 				tilemap.h,
 			}
-			rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, rl.WHITE)
+
+
+			color := rl.WHITE
+			if source_rect == {} do color = rl.BLANK
+
+			// blobwall := tilemap.options.drawBlobWalls && tileType == .Wall
+			// if !blobwall {
+				rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, color)				
+			// } else {
+			// 	drawBlobWall(world, tilemap, x, y)
+			// }
 		}
 	}
 }
 
+
+// drawBlobWall :: proc(world: ^World, tilemap: Tilemap, x: i32, y: i32) {
+// 	i := y * world.width + x
+
+// 	neighbors: Blob_Set = {}
+
+
+// 	// if world.tiles[i - world.width] == Tile.Wall 	do neighbors |= {.N}
+// 	// if world.tiles[i + 1] == Tile.Wall 				do neighbors |= {.E}
+// 	// if world.tiles[i + world.width] == Tile.Wall 	do neighbors |= {.S}
+// 	// if world.tiles[i - 1] == Tile.Wall 				do neighbors |= {.W}
+
+// 	// if world.tiles[i - world.width + 1] == Tile.Wall do neighbors |= {.ne}
+// 	// if world.tiles[i + world.width + 1] == Tile.Wall do neighbors |= {.se}
+// 	// if world.tiles[i + world.width - 1] == Tile.Wall do neighbors |= {.sw}
+// 	// if world.tiles[i - world.width - 1] == Tile.Wall do neighbors |= {.nw}
+
+// 	N : bool = world.tiles[i - world.width] == Tile.Wall
+// 	E : bool = world.tiles[i + 1] == Tile.Wall
+// 	S : bool = world.tiles[i + world.width] == Tile.Wall
+// 	W : bool = world.tiles[i - 1] == Tile.Wall
+
+// 	//Upper left
+// 	if N, 
+
+// }
 
 
 measure_puzzle :: #force_inline proc(puzzle: ^Puzzle) {
@@ -156,11 +226,11 @@ measure_puzzle :: #force_inline proc(puzzle: ^Puzzle) {
 	puzzle.height = height - 1
 }
 
-set_puzzle :: #force_inline proc(_puzzle: Puzzle, world: ^World, next_world: ^World, player: ^Player, record: ^Record) -> Puzzle {
+set_puzzle :: #force_inline proc(_puzzle: Puzzle, world: ^World, next_world: ^World, player: ^Player, record: ^Record, new_record := Record {}) -> Puzzle {
 
 	puzzle := _puzzle
 
-	clear(&record.moves)
+	record^ = new_record
 
 	for tile, index in next_world.tiles {
 		next_world.tiles[index] = Tile.Void
@@ -351,29 +421,27 @@ reverse_move :: proc(move: Move_Type, _player: Player, world: ^World) -> (new_pl
 }
 
 
+
+SelectPuzzleSet :: proc(directory: string, filename: string) -> [dynamic]Puzzle{
+	return read_puzzle_file(strings.concatenate({directory, filename})).puzzles
+}
+
+UpdateWindowTitle :: proc(title:cstring, window: ^Window) {
+	window.title = title
+	rl.SetWindowTitle(title)
+}
+
 main :: proc() {
-	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{ }}
+	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE }, false}
 
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
-	rl.InitWindow(window.width, window.height, window.name)
+	rl.InitWindow(window.width, window.height, window.title)
+	// rl.ToggleBorderlessWindowed()
+	// rl.SetWindowSize(960,720)
+	// rl.SetWindowPosition(100, 100)
 	rl.SetWindowState( window.control_flags )
 	rl.SetTargetFPS(window.fps)
-
-	puzzle_file := read_puzzle_file("./levels/Sasquatch.txt")
-
-	puzzleSet := puzzle_file.puzzles
-
-	// puzzleSet : []Puzzle = {
-	// 	readPuzzleString(simplestpuzzle, "simplest possible sokoban"),
-	// 	readPuzzleString(claire, "Claire, by Lee J Haywood"),
-	// 	readPuzzleString(coffeepuzzle, "coffe sokoban"),
-	// 	readPuzzleString(courtyard, "courtyard")
-	// }
-
-	// for board, index in puzzleSet {
-	// 	fmt.print(board.title)
-	// }
-
+	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
 
 	game := Game {
 		pause     = true,
@@ -382,8 +450,8 @@ main :: proc() {
 		state = .Gameplay
 	}
 
-	world			:= World{game.width, game.height, make([]Tile, game.width * game.height)}
-	next_world		:= World{game.width, game.height, make([]Tile, game.width * game.height)}
+	world		:= World{game.width, game.height, make([]Tile, game.width * game.height)}
+	next_world	:= World{game.width, game.height, make([]Tile, game.width * game.height)}
 
 	defer delete(world.tiles)
 	defer delete(next_world.tiles)
@@ -392,98 +460,48 @@ main :: proc() {
 
 	initial_player : Player
 	player : Player
-
-	
 	record := Record {}
 
-	puzzle := set_puzzle(puzzleSet[game.puzzle_index], &world, &next_world, &player, &record)
+
+
+
+
+	set_of_sets := GetSetOfSets("./levels/")
+	set_index :int
+	set_index, game.puzzle_index = SimpleLoad(set_of_sets)
+	if set_index == -1  {
+		game.puzzle_index = 0
+		set_index = 0
+		for title, i in set_of_sets {
+			if title == "Microban.txt" do set_index = i
+		}
+	} else {
+		if game.puzzle_index == -1 {
+			game.puzzle_index = 0
+		} else {
+			game.puzzle_index += 1
+		}
+	}
+
+
+	puzzle_set := SelectPuzzleSet("./levels/", set_of_sets[set_index])
+	puzzle := set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 	world, next_world = next_world, world
-	rl.SetWindowTitle(puzzle.title_bar)
+	UpdateWindowTitle(puzzle.title_bar, &window)
 
-	shoveIt := Tilemap {
-		rl.LoadTexture("./tilesets/ShoveIt.png"),
-		24, 24,
-		4, 4,
-		{
-			{5,3}, //void
-			{6,2}, //wall
-			{0,0}, //player
-			{1,0}, //player on goal
-			{2,1}, //box
-			{3,1}, //box on goal
-			{5,2}, //goal
-			{4,2}, //floor
-			{1,0}, //player resting
-			{0,0}, //player walking
-			{4,0}, //player pushing neutral
-			{2,0}, //player walking odd frame
-			{3,0}, //player pushing even frame
-			{5,0}, //player pushing odd frame
-		}
+	tilemap := LoadVariousTilemaps()
+	tilerenderer := SetTileRenderer(tilemap)
 
-	}
-
-	sokobanPerfect := Tilemap {
-		rl.LoadTexture("./tilesets/Sokoban Perfect.png"),
-		40, 54,
-		4, 4,
-		{
-			{5,0}, //void
-			{2,0}, //wall
-			{4,1}, //player
-			{4,1}, //player on goal
-			{3,0}, //box
-			{4,0}, //box on goal
-			{1,0}, //goal
-			{0,0}, //floor
-
-			{4,1}, //player resting
-			{3,1}, //player walking
-			{4,2}, //player pushing neutral
-			{5,1}, //player walking odd frame
-			{5,2}, //player pushing even frame
-			{3,2}, //player pushing odd frame
-		}
-	}
-
-	sneezingTiger := Tilemap {
-		rl.LoadTexture("./tilesets/sneezing_tiger.png"),
-		16, 16,
-		0, 0,
-		{
-			{0,0},
-			{6,0},
-			{2,7},
-			{3,7},
-			{0,7},
-			{1,7},
-			{4,7},
-			{0,6},
-
-			{2,7},
-			{2,7},
-			{2,7},
-			{2,7},
-			{2,7},
-			{2,7},
-		}
-
-	}
-
-	tilemap := shoveIt
-
-	// tilerenderer := SetTileRenderer(tilemap, {disableVoidTile = false, floorTileAsVoid = true, fixedPlayerRotation = true})
-	tilerenderer := SetTileRenderer(tilemap, {})
-
-
+	gui_data := InitGui(set_of_sets, set_index)
 
 	camera : rl.Camera2D
 	camera.target = {f32(world.width) / 2.0 * tilemap.w,f32(world.height)/2 * tilemap.h}
 	camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
-	camera.zoom = 2.0
-
-
-
+	if tilemap.options.defaultZoom > 0 do camera.zoom = tilemap.options.defaultZoom
+	else {
+		if tilemap.w <= 32 do camera.zoom = 2
+		else do camera.zoom = 1
+	}
 
 	rest_timer: f32
 	hud_timer: f32
@@ -492,6 +510,15 @@ main :: proc() {
 
 	for !rl.WindowShouldClose() {
 		using game
+
+		if rl.IsWindowResized() || window.resize_flag {
+			window.width = rl.GetScreenWidth()
+			window.height = rl.GetScreenHeight()
+			camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
+
+			window.resize_flag = false
+		}
+
 
 		process_user_input(&user_input, window, world)
 
@@ -556,6 +583,7 @@ main :: proc() {
 					new_player, success := reverse_move(m, player, &world)
 					if success {
 						player = new_player
+						game.moveCount -= 1
 					} else {
 						fmt.printf("Invalid Undo")
 					}
@@ -641,6 +669,8 @@ main :: proc() {
 						world.tiles[leap.y * world.width + leap.x] = Tile.BoxOnGoal
 						if check_for_win(world) {
 							state = .YouWin
+							// hi_score = DoWin(record, puzzle_index, &game.save)
+							SimpleSave(record, puzzle_index, set_of_sets[set_index])	
 						}
 				}
 				if moveCount % 2 == 0 {
@@ -672,17 +702,36 @@ main :: proc() {
 
 		next_index := game.puzzle_index
 		if user_input.next_level || (user_input.advance && state == .YouWin) {
-			next_index = (next_index + 1) %% len(puzzleSet)
+			next_index = (next_index + 1) %% len(puzzle_set)
 		}
 		if user_input.prev_level {
-			next_index = (next_index - 1) %% len(puzzleSet)
+			next_index = (next_index - 1) %% len(puzzle_set)
 		}
 		if (next_index != game.puzzle_index || user_input.reset) {
 			game.puzzle_index = next_index
-			puzzle = set_puzzle(puzzleSet[game.puzzle_index], &world, &next_world, &player, &record)
+			puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 			world, next_world = next_world, world
-			rl.SetWindowTitle(puzzleSet[game.puzzle_index].title_bar)
+			UpdateWindowTitle(puzzle_set[game.puzzle_index].title_bar, &window)
 			state = .Gameplay
+		}
+
+		if gui_data.change_set {
+			if set_index != int(gui_data.set_result) {
+				set_index = int(gui_data.set_result)
+
+				game.puzzle_index = 0
+				_, p := SimpleLoad(set_of_sets, set_of_sets[set_index])
+				if p != -1 {
+					game.puzzle_index = p + 1
+				}
+
+				puzzle_set = SelectPuzzleSet("./levels/", set_of_sets[set_index])
+				puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
+				world, next_world = next_world, world
+				UpdateWindowTitle(puzzle.title_bar, &window)
+				state = .Gameplay
+			}
+			gui_data.change_set = false
 		}
 		
 		//move camera
@@ -718,24 +767,29 @@ main :: proc() {
 
 
 			rl.BeginMode2D(camera)
-		    	draw_world_tiles(&world, tilemap, tilerenderer.options, tilerenderer.baseLayerRects, player, false)
-		    	draw_world_tiles(&world, tilemap, tilerenderer.options, tilerenderer.objectLayerRects, player, true)
+		    	draw_world_tiles(&world, tilemap, tilerenderer.baseLayerRects, player, false)
+		    	draw_world_tiles(&world, tilemap, tilerenderer.objectLayerRects, player, true)
 		    rl.EndMode2D()
 
 		    if state == .YouWin {
-		    	rl.DrawText(YouWinMessage, 94, 94, 30, rl.BLACK)
-		    	rl.DrawText(YouWinMessage, 96, 96, 30, rl.GREEN)
+		    	message := YouWinMessage(len(record.moves))
+		    	x := window.width/2 - rl.MeasureText(message, 30)/2
+		    	rl.DrawText(message, x - 2, 94, 30, rl.BLACK)
+		    	rl.DrawText(message, x, 96, 30, rl.RAYWHITE)
+
+		    	if hi_score {
+		    		hs :cstring= "NEW RECORD"
+		    		x = window.width / 2 - rl.MeasureText(hs, 30) / 2
+		    		rl.DrawText(hs, x - 2, 130, 30, rl.MAGENTA)
+		    		rl.DrawText(hs, x, 132, 30, rl.YELLOW)
+		    	}
 		    }
 		    if puzzle.probably_unwinnable {
 		    	rl.DrawText(UnsolvableMessage, 22, window.height - 50, 30, rl.BLACK)
 		    	rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
 		    }
 
-		    if state == .SetSelect {
-
-		    }
-
-		    // draw_gui(window)
+		    DrawGui(&window, &gui_data)
 
 		    if show_hud_message {
 		    	buf: [64]u8 = ---
@@ -752,8 +806,14 @@ main :: proc() {
 	}
 }
 
+hi_score := false
 
-YouWinMessage :: "Solved it! Try the next one?"
+YW : []string = {"Solved in ",""," moves! Try the next one?"}
+YouWinMessage :: proc(moves: int) -> cstring {
+	buf: [64]u8 = ---
+	YW[1] = strconv.itoa(buf[:], moves )
+	return strings.clone_to_cstring(strings.concatenate(YW[:]))
+}
 UnsolvableMessage :: "this puzzle is unsolvable... press ] to skip"
 
 

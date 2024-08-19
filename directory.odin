@@ -4,6 +4,7 @@ import "core:fmt"
 import "core:os"
 import "core:path/filepath"
 import "core:strings"
+import "core:slice"
 
 print_file_info :: proc(fi: os.File_Info) {
     // Split the path into directory and filename
@@ -26,10 +27,26 @@ print_file_info :: proc(fi: os.File_Info) {
     }
 }
 
+GetSetOfSets :: proc(directory: string) -> []string {
+    file_list := read_directory(directory)
+    // defer os.file_info_slice_delete(file_list)
+    filenames := [dynamic]string {}
+    for fi in file_list {
+        if !fi.is_dir && !strings.has_prefix(fi.name, ".") {
+            append(&filenames, fi.name)
+        }
+    }
+    slice.sort(filenames[:])
+    return filenames[:]
+}
+
 read_directory :: proc(_dir: string) -> []os.File_Info {
+    start_dir := os.get_current_directory()
+    defer os.set_current_directory(start_dir)
+
     os.set_current_directory(_dir)
+
     cwd := os.get_current_directory()
-    fmt.println("Current working directory:", cwd)
 
     f, err := os.open(cwd)
     defer os.close(f)
@@ -41,7 +58,7 @@ read_directory :: proc(_dir: string) -> []os.File_Info {
     }
 
     fis: []os.File_Info
-    defer os.file_info_slice_delete(fis) // fis is a slice, we need to remember to free it
+    // defer os.file_info_slice_delete(fis) // fis is a slice, we need to remember to free it
 
     fis, err = os.read_dir(f, -1) // -1 reads all file infos
     if err != os.ERROR_NONE {
@@ -55,7 +72,3 @@ read_directory :: proc(_dir: string) -> []os.File_Info {
 
     return fis
 }
-
-// set_of_sets :: proc([]os.File_Info) -> []Set {
-    
-// }

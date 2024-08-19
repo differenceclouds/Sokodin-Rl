@@ -15,6 +15,7 @@ Set :: struct {
 	title: string,
 	notes: [dynamic]string,
 	puzzles: [dynamic]Puzzle,
+	hash: u32
 }
 
 InvalidFile: Set = {
@@ -44,7 +45,7 @@ ParsingState :: enum {
 read_puzzle_file :: proc(filepath: string) -> Set {
     text, ok := os.read_entire_file(filepath)
     if !ok {
-        panic("Unable to read data.txt")
+        panic(strings.concatenate({"Unable to read ", filepath}))
     }
 
     it: string
@@ -57,7 +58,7 @@ read_puzzle_file :: proc(filepath: string) -> Set {
 	set : Set = {}
 	
 	{
-		titlepath := strings.trim_right(filepath, ".txt")
+		titlepath := strings.trim_suffix(filepath, ".txt")
 		ss := strings.split(titlepath, "/")
 		set.title = ss[len(ss) - 1]
 	}
@@ -66,6 +67,7 @@ read_puzzle_file :: proc(filepath: string) -> Set {
 	state : ParsingState = .notes
 	
 	holdingPuzzle : PrePuzzle = {}
+	defer delete(holdingPuzzle.lines)
 
 	puzzle_index : int = 1
 

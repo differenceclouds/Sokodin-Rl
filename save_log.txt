@@ -1,0 +1,3 @@
+
+;set: Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU
+;set: Minicosmos.txt ;index: 0 ;moves: uuluuRlddrrruruullDDullddrRlddrruUlu
