@@ -14,6 +14,8 @@ GuiData :: struct {
 	change_set: bool,
 	show_controls: bool,
 	sets_param: cstring,
+	tilemap_inc: bool,
+	tilemap_dec: bool,
 }
 
 
@@ -99,12 +101,17 @@ DrawGui :: proc(window: ^Window, data: ^GuiData) {
 		edit_mode = !edit_mode
 		change_set = true
 	}
-
 	r -= unit*6 + pad
 
 	if rl.GuiButton({r - unit*6, pad, unit*6, unit}, "#191#Show Controls") do show_controls = true
-
 	r -= unit*6 + pad
+
+
+	if rl.GuiButton({r - unit, pad, unit, unit}, "#119#") do tilemap_inc = true
+	r -= unit + pad
+
+	if rl.GuiButton({r - unit, pad, unit, unit}, "#118#") do tilemap_dec = true
+	r -= unit + pad
 
 	//FROM CENTER
 
@@ -126,4 +133,10 @@ DrawGui :: proc(window: ^Window, data: ^GuiData) {
 	}
 }
 
-controls_message :: "Move: Arrow Keys \n Restart: R \n Undo: Z \n Zoom: +/- \n Advance: Space \n Next/Prev Level: []"
+controls_message :: 
+`Move: Arrow Keys
+Restart: R
+Undo: Z
+Zoom: +/-
+Advance: Space
+Next/Prev Level: []`

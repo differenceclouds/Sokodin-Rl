@@ -1,0 +1,269 @@
+{"frames": [
+
+{
+	"filename": "BDE Marron - Philippe Galmel - YASC.png",
+	"frame": {"x":0,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Boxxle - Nintendo - 1989 - YASC.png",
+	"frame": {"x":0,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Bulldozer - Expert Software - YASC.png",
+	"frame": {"x":0,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Chess Black - Tyge Fogh - YASC.png",
+	"frame": {"x":0,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Chess Marron - Tyge Fogh - YASC.png",
+	"frame": {"x":256,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Felix The Cat - Philippe Galmel - YASC.png",
+	"frame": {"x":256,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Francois Marques 1 - YASC.png",
+	"frame": {"x":256,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Francois Marques 2 - YASC.png",
+	"frame": {"x":256,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Francois Marques 2 Seemless - YASC.png",
+	"frame": {"x":512,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Heavy Metal 1 - Gerry Wiseman - YASC.png",
+	"frame": {"x":512,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Jumanji 1A - Gerry Wiseman - YASC.png",
+	"frame": {"x":512,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Jumanji 1B - Gerry Wiseman - YASC.png",
+	"frame": {"x":512,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Kenya Maruyama - YASC.png",
+	"frame": {"x":768,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Mac Mini - YASC.png",
+	"frame": {"x":1024,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Magic Pearls - Ward de Langhe - YASC.png",
+	"frame": {"x":1280,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Magneto 1 - Gerry Wiseman.png",
+	"frame": {"x":1536,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Matrix - Gerry Wiseman - YASC.png",
+	"frame": {"x":1792,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Monty - Vitaly Pinchuk - YASC.png",
+	"frame": {"x":768,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Multiban - YASC.png",
+	"frame": {"x":768,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Nightshift 1 - Gerry Wiseman - YASC.png",
+	"frame": {"x":768,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Rocks 'n' Diamonds - Artsoft - YASC.png",
+	"frame": {"x":1024,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Rocks 'n' Diamonds 2016 - YASC.png",
+	"frame": {"x":1024,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Simple Bricks - Borgar Thorsteinsson - YASC.png",
+	"frame": {"x":1024,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Simple Plain - Borgar Thorsteinsson - YASC.png",
+	"frame": {"x":1280,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Skulloban 1 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1536,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Sokomind - Gerry Wiseman - YASC.png",
+	"frame": {"x":1792,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Sokosex 2 - True Emotions - YASC.png",
+	"frame": {"x":1280,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Sokosex 7 - True Emotions - YASC.png",
+	"frame": {"x":1280,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Soukoban - Stafan Modig - YASC.png",
+	"frame": {"x":1536,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Soukoban Rev - Stafan Modig - YASC.png",
+	"frame": {"x":1536,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Supaplex - Thinkware - YASC.png",
+	"frame": {"x":1792,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Toto - Philippe Galmel - YASC.png",
+	"frame": {"x":1792,"y":1536,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sheets-1.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"related_multi_packs": [ "sheets-0.json", "sheets-2.json", "sheets-3.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:f3f64f6f4fc7086a2bf2552ba8bc1a1a:01614a861dcbe49dc707e7f8af9c5650:985a3021f0111fe1b658c8ffe726ca4f$"
+}
+}

@@ -1,0 +1,157 @@
+{"frames": [
+
+{
+	"filename": "Allan B Liss -1992 - YASC.png",
+	"frame": {"x":400,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Boendorf - 2001 - YASC.png",
+	"frame": {"x":400,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Glowing Pumpkins - Ticko - YASC.png",
+	"frame": {"x":592,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Ice Cubes - Kavel - YASC.png",
+	"frame": {"x":592,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "MacIntosh - Scott Lindhurst - 1999 - YASC.png",
+	"frame": {"x":784,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Pacban - YASC.png",
+	"frame": {"x":784,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Pacman - Gerry Wiseman - YASC.png",
+	"frame": {"x":976,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Pacman - Jerry J Shekhel - YASC.png",
+	"frame": {"x":976,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Pacman - Tyge Fogh - YASC.png",
+	"frame": {"x":1168,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Shove - NCS Corporation - YASC.png",
+	"frame": {"x":1168,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "Skulloban 2 - Gerry Wiseman - YASC.png",
+	"frame": {"x":0,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Snooker - John C Davis - YASC.png",
+	"frame": {"x":0,"y":400,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Sokoban 1994 - Ratcliffe - YASC.png",
+	"frame": {"x":200,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "SokoGems - Gerry Wiseman - YASC.png",
+	"frame": {"x":200,"y":400,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Takaken - Kenichiro Takahashi - YASC.png",
+	"frame": {"x":1360,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "WinSoko 1 - Robert Vasizek - YASC.png",
+	"frame": {"x":1360,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "WinSoko 2 - Robert Vasizek - YASC.png",
+	"frame": {"x":1552,"y":0,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+},
+{
+	"filename": "WinSoko Xmas - YASC.png",
+	"frame": {"x":1552,"y":384,"w":192,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":192,"h":384},
+	"sourceSize": {"w":192,"h":384}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sheets-3.png",
+	"format": "RGBA8888",
+	"size": {"w":1744,"h":800},
+	"scale": "1",
+	"related_multi_packs": [ "sheets-0.json", "sheets-1.json", "sheets-2.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:f3f64f6f4fc7086a2bf2552ba8bc1a1a:01614a861dcbe49dc707e7f8af9c5650:985a3021f0111fe1b658c8ffe726ca4f$"
+}
+}

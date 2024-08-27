@@ -1,3 +1,29 @@
 
 ;set: Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU
 ;set: Minicosmos.txt ;index: 0 ;moves: uuluuRlddrrruruullDDullddrRlddrruUlu
+;set: Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: Sokoban Jr. 1.txt ;index: 0 ;moves: UluRRlddRurDDullDrdLLuUUru
+;set: Sokogen 990602.txt ;index: 0 ;moves: rDlddrrruuLLulDrrrddllUdrruululldRddl
+;set: Microban.txt ;index: 0 ;moves: dlUrrrdLullddrluurldurldudurrdulldRlurldurrrdLullddrUluRduuulDrddrruLdlU
+;set: Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: Microban.txt ;index: 2 ;moves: ruuLLLddllluurRurDrrrddlUruLLLulDllddrrrUdllluurrDrdLruluurD
+;set: Microban.txt ;index: 3 ;moves: ullDLulldRdrRuurrdLrddlUllluurrDLurrrdLLulllddrrRurrddlUru
+;set: Microban.txt ;index: 4 ;moves: LddrruLrruulDlluRlrdulrdddlUUruulldDrddllu
+;set: Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU
+;set: Microban.txt ;index: 1 ;moves: ududrdddllluuuurrrddddlruduuululldduurrrdlrdddllluuuurrdrddLruulDrddllluu
+;set: Microban.txt ;index: 2 ;moves: ruuLLLulDrddlUdlluurRurDrrrddlUruLLLulDrlrlllddrrrUdllluurrDrdLuuurD
+;set: Microban.txt ;index: 4 ;moves: LuulrrrrlrllrlrlrllrrrddddllluuudduuurrdLdudlrurrlldlddrruUlldRuuulldDrddllu
+;set: Microban.txt ;index: 5 ;moves: ulrdudulrddlluldururrddlllllulrlrrrrurrddlllllulrlullldddrrududlluuurrrdrdrurdrudlllurrrurrddlluudldlludurdullulllddRluurDRRRRRdrrruullDurrddlLLLulllllddrrlUluRRRRRRdrrruullDurrddlLLulllllddrUluRRRRRdrrruullDurrddl
+;set: Microban.txt ;index: 6 ;moves: udrlrludrruuddllllrrrruuuuulllldddddrrlrlluuddrludrludrrrrlruuuuullldRurrdddddlrudlllluurUldddrrudrruuuLdLddrUdlllu
+;set: Microban.txt ;index: 7 ;moves: llDDDDDDldddrruuLuuuuuuurrdLulDDDDDDlllddrrUddrruuLrddllulluurRllddrrdrruulUUUUUUluRdddddddrddlluUdlluurRdrUUUUU
+;set: Microban.txt ;index: 8 ;moves: urrDulldRdRluurDrDDlUruLdlUru
+;set: Microban.txt ;index: 9 ;moves: rddrrlruuLLrrddrruuLLrruuurrdddLruuudddlLddlluuRlddrruUUUddddlllluuRRRlddrruUUdddlllllluuRRRRRlddrru
+;set: Microban.txt ;index: 10 ;moves: ullldddldrudldluurdlurdrrrrrududuLdllluuuurrrdDDrdLLLLullddrUluRdrrrruulDrdLLLUllddrUrrruuruullld
+;set: Microban.txt ;index: 11 ;moves: uduuddddrrruulllrduluululldRdRlulurlrrDrDDrlrddlluRuuulldRurDDrrrddllUdllu
+;set: Microban.txt ;index: 12 ;moves: rDlDDRddlUUUUruLdlUrddddrrrlldludrurruLLdlduUUUruLrlddurDlddrruLdlUUru
+;set: Microban.txt ;index: 13 ;moves: uulldulldddurlrdrUlluurrDulldddrrUlluurrrrddLLrruullDulldddrrUdlluRRlluurrrrddLLrruullDulldddrrlluuudurrrllldddrrUdudllrruLrrrlrlldllrurrruullDurlllrrrrddlLdllURRuull
+;set: Microban.txt ;index: 14 ;moves: DrdddllUUddrruuulLLLdlluRRRRdddrruuLrddllu
+;set: Microban.txt ;index: 15 ;moves: lddrUlduuddrrruLLdlUUUruLLLulDDDrdLdlUruuurrrddduurrDLdlUUruLLLulDDDrddlluRdrUluuurrrrddddrruLLdlUUUruLLLulDDDDld
+;set: Microban.txt ;index: 16 ;moves: ldDurrDulldurrullddRddlUUddrrruLdlUUdr
+;set: Microban.txt ;index: 17 ;moves: ruuuuulldrllddrRDrUUdllluurrurrdLLrdddddlUUruuuullldddrRdrUUdllluuurrdLurrrd
+;set: Microban.txt ;index: 18 ;moves: ulldrrurrlrrlDDDlddrUUUUruLLLdRurDDDlddrUUUUlllluR

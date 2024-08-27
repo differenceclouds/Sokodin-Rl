@@ -3,6 +3,7 @@ package sokoban
 import "core:fmt"
 import "core:strings"
 import "core:strconv"
+import "core:math/rand"
 import rl "vendor:raylib"
 
 
@@ -106,6 +107,9 @@ User_Input :: struct {
 
 	zoom_in: bool,
 	zoom_out: bool,
+
+	tilemap_inc: bool,
+	tilemap_dec: bool,
 }
 
 
@@ -341,6 +345,7 @@ process_user_input :: proc(user_input: ^User_Input, window: Window, world: World
 		downHeld	= rl.IsKeyDown(.DOWN),
 		leftHeld	= rl.IsKeyDown(.LEFT),
 		rightHeld	= rl.IsKeyDown(.RIGHT),
+
 		reset 		= rl.IsKeyPressed(.R),
 		next_level	= rl.IsKeyPressed(.RIGHT_BRACKET),
 		prev_level	= rl.IsKeyPressed(.LEFT_BRACKET),
@@ -350,14 +355,11 @@ process_user_input :: proc(user_input: ^User_Input, window: Window, world: World
 		zoom_out 	= rl.IsKeyPressed(.MINUS),
 
 		undo 		= rl.IsKeyPressed(.Z),
+
+		tilemap_inc = rl.IsKeyPressed(.PERIOD),
+		tilemap_dec = rl.IsKeyPressed(.COMMA)
 	}
 }
-
-
-
-// do_move :: proc(move: Move_Type, _player: Player, world: ^World) -> (new_player: Player) {
-
-// }
 
 
 
@@ -431,6 +433,16 @@ UpdateWindowTitle :: proc(title:cstring, window: ^Window) {
 	rl.SetWindowTitle(title)
 }
 
+SetCamera :: proc(camera: ^rl.Camera2D, window: Window, world: World, tilemap: Tilemap) {
+	camera.target = {f32(world.width) / 2.0 * tilemap.w,f32(world.height)/2 * tilemap.h}
+	camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
+	if tilemap.options.defaultZoom > 0 do camera.zoom = tilemap.options.defaultZoom
+	else {
+		if tilemap.w <= 32 do camera.zoom = 2
+		else do camera.zoom = 1
+	}
+}
+
 main :: proc() {
 	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE }, false}
 
@@ -489,19 +501,23 @@ main :: proc() {
 	world, next_world = next_world, world
 	UpdateWindowTitle(puzzle.title_bar, &window)
 
-	tilemap := LoadVariousTilemaps()
+
+
+	tilemap_list := LoadVariousTilemaps()
+	InitSheets("sheets-0", &tilemap_list)
+	InitSheets("sheets-1", &tilemap_list)
+	InitSheets("sheets-2", &tilemap_list)
+	InitSheets("sheets-3", &tilemap_list)
+
+
+	tilemap_index := 0
+	tilemap := tilemap_list[tilemap_index]
 	tilerenderer := SetTileRenderer(tilemap)
 
 	gui_data := InitGui(set_of_sets, set_index)
 
 	camera : rl.Camera2D
-	camera.target = {f32(world.width) / 2.0 * tilemap.w,f32(world.height)/2 * tilemap.h}
-	camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
-	if tilemap.options.defaultZoom > 0 do camera.zoom = tilemap.options.defaultZoom
-	else {
-		if tilemap.w <= 32 do camera.zoom = 2
-		else do camera.zoom = 1
-	}
+	SetCamera(&camera, window, world, tilemap)
 
 	rest_timer: f32
 	hud_timer: f32
@@ -514,7 +530,7 @@ main :: proc() {
 		if rl.IsWindowResized() || window.resize_flag {
 			window.width = rl.GetScreenWidth()
 			window.height = rl.GetScreenHeight()
-			camera.offset = {f32(window.width) / 2.0, f32(window.height) / 2.0}
+			camera.offset = {f32(window.width/2), f32(window.height/2)}
 
 			window.resize_flag = false
 		}
@@ -612,12 +628,16 @@ main :: proc() {
 		}
 
 
+
+
+		moved := false
+		movedBox := false
+
 		if (player != front && !undo) {
 			prevTile := world.tiles[player.y    * world.width + player.x]
 			nextTile := world.tiles[front.y 	* world.width + front.x]
 			leapTile := world.tiles[leap.y 		* world.width + leap.x]
-			moved := false
-			movedBox := false
+
 			leapTileFree := leapTile == Tile.Floor || leapTile == Tile.Goal
 
 			#partial switch nextTile {
@@ -699,6 +719,7 @@ main :: proc() {
 		}
 
 
+		randomize : bool
 
 		next_index := game.puzzle_index
 		if user_input.next_level || (user_input.advance && state == .YouWin) {
@@ -709,6 +730,7 @@ main :: proc() {
 		}
 		if (next_index != game.puzzle_index || user_input.reset) {
 			game.puzzle_index = next_index
+			randomize = true
 			puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 			world, next_world = next_world, world
 			UpdateWindowTitle(puzzle_set[game.puzzle_index].title_bar, &window)
@@ -733,6 +755,52 @@ main :: proc() {
 			}
 			gui_data.change_set = false
 		}
+
+		tilemap_updated : bool
+
+
+
+		if gui_data.tilemap_inc || user_input.tilemap_inc {
+			tilemap_index = (tilemap_index + 1) %% len(tilemap_list)
+			gui_data.tilemap_inc = false
+			tilemap_updated = true
+		} else if gui_data.tilemap_dec || user_input.tilemap_dec{
+			tilemap_index = (tilemap_index - 1) %% len(tilemap_list)
+			gui_data.tilemap_dec = false
+			tilemap_updated = true
+
+		} else if user_input.up && movedBox {
+			tilemap_index = (tilemap_index + 7) %% len(tilemap_list)
+			gui_data.tilemap_dec = false
+			tilemap_updated = true
+		} else if user_input.right && movedBox {
+			tilemap_index = (tilemap_index + 6) %% len(tilemap_list)
+			gui_data.tilemap_dec = false
+			tilemap_updated = true
+		} else if user_input.down && movedBox  {
+			tilemap_index = (tilemap_index - 7) %% len(tilemap_list)
+			gui_data.tilemap_dec = false
+			tilemap_updated = true
+		} else if user_input.left && movedBox {
+			tilemap_index = (tilemap_index - 6) %% len(tilemap_list)
+			gui_data.tilemap_dec = false
+			tilemap_updated = true
+
+		} else if randomize {
+			tilemap_index = int(rand.float32() * 100) %% len(tilemap_list)
+			tilemap_updated = true
+			randomize = false
+		}
+		if tilemap_updated {
+			tilemap = tilemap_list[tilemap_index]
+			tilerenderer = SetTileRenderer(tilemap)
+			SetCamera(&camera, window, world, tilemap)
+			tilemap_updated = false
+		}
+
+
+
+
 		
 		//move camera
 		{

@@ -1,0 +1,317 @@
+{"frames": [
+
+{
+	"filename": "Alchemyst - Gerry Wiseman - 2002 - YASC.png",
+	"frame": {"x":1216,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Antique Desk 1 - Gerry Wiseman - 2002 - YASC.png",
+	"frame": {"x":992,"y":960,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Antique Desk 3 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1192,"y":960,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Blue - Barbara Chamberlin - YASC.png",
+	"frame": {"x":0,"y":1536,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Blue Granite - Merlinj W - 2004 - YASC.png",
+	"frame": {"x":240,"y":1536,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Boxes - Gilles Merour - 2001 - YASC.png",
+	"frame": {"x":480,"y":1536,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Boxworld - Jeng Jong Liang - 1992 - YASC.png",
+	"frame": {"x":512,"y":512,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "BoxWorld Indigo - YASC.png",
+	"frame": {"x":512,"y":992,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Chinese - Dan Adrian Baluta - YASC.png",
+	"frame": {"x":1232,"y":400,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Chinese Checkers A - Gerry Wiseman - YASC.png",
+	"frame": {"x":1416,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Chinese Checkers B - Gerry Wiseman - YASC.png",
+	"frame": {"x":1616,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Circle - Ariel Rodrigues - 1999 - YASC.png",
+	"frame": {"x":1816,"y":0,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Doughnut of Zen - Paw Damgaard - YASC.png",
+	"frame": {"x":720,"y":1472,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Easter - Brian Damgaard - YASC.png",
+	"frame": {"x":1200,"y":1360,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Gems - Pete Hannon - YASC.png",
+	"frame": {"x":1392,"y":800,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Go - YASC.png",
+	"frame": {"x":1432,"y":400,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Go+ - YASC.png",
+	"frame": {"x":1632,"y":400,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Green - YASC.png",
+	"frame": {"x":1592,"y":800,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Heavy Metal 2 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1792,"y":800,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Japan - Tanaka Nikos - YASC.png",
+	"frame": {"x":752,"y":512,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Lager - Borgar Thorsteinsson - YASC.png",
+	"frame": {"x":752,"y":992,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Metallica 2A - Gerry Wiseman -YASC.png",
+	"frame": {"x":1400,"y":1200,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Metallica 2B - Gerry Wiseman - YASC.png",
+	"frame": {"x":1400,"y":1600,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Metallica 3 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1600,"y":1200,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Micro Sokoban - YASC.png",
+	"frame": {"x":768,"y":0,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Mr Happy - Ray Adam Latiolais - 2002 - YASC.png",
+	"frame": {"x":960,"y":1472,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Neokwinto - YASC.png",
+	"frame": {"x":1600,"y":1600,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Nightshift 2 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1800,"y":1200,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Nightshift 3 - Gerry Wiseman - YASC.png",
+	"frame": {"x":1800,"y":1600,"w":200,"h":400},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
+	"sourceSize": {"w":200,"h":400}
+},
+{
+	"filename": "Soko-Ban for DOS - Spectrum Holobyte - 1982 - YASC.png",
+	"frame": {"x":992,"y":480,"w":240,"h":480},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":480},
+	"sourceSize": {"w":240,"h":480}
+},
+{
+	"filename": "Tiny - YASC.png",
+	"frame": {"x":1008,"y":0,"w":208,"h":416},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":208,"h":416},
+	"sourceSize": {"w":208,"h":416}
+},
+{
+	"filename": "Unitix - Gerry Wiseman - YASC.png",
+	"frame": {"x":0,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Warcraft - Blizzard - YASC.png",
+	"frame": {"x":0,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "XSok - Michael Bischoff - YASC.png",
+	"frame": {"x":0,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "XSok for Mac - Michael Bischoff - YASC.png",
+	"frame": {"x":256,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "XSok Red - Michael Bischoff - YASC.png",
+	"frame": {"x":256,"y":512,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Yoshi Classic - Borgar Thorsteinsson - YASC.png",
+	"frame": {"x":256,"y":1024,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Yoshi Red - YASC.png",
+	"frame": {"x":512,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sheets-2.png",
+	"format": "RGBA8888",
+	"size": {"w":2016,"h":2016},
+	"scale": "1",
+	"related_multi_packs": [ "sheets-0.json", "sheets-1.json", "sheets-3.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:f3f64f6f4fc7086a2bf2552ba8bc1a1a:01614a861dcbe49dc707e7f8af9c5650:985a3021f0111fe1b658c8ffe726ca4f$"
+}
+}

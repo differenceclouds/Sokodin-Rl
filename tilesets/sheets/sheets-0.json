@@ -1,0 +1,181 @@
+{"frames": [
+
+{
+	"filename": "Aymeric du Peloux - YASC.png",
+	"frame": {"x":1612,"y":560,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Balls - Hans-Dietrich Pester - YASC.png",
+	"frame": {"x":0,"y":1600,"w":224,"h":448},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":224,"h":448},
+	"sourceSize": {"w":224,"h":448}
+},
+{
+	"filename": "BDE Green - Philippe Galmel - YASC.png",
+	"frame": {"x":1636,"y":0,"w":256,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":512},
+	"sourceSize": {"w":256,"h":512}
+},
+{
+	"filename": "Boxes - Gilles Merour - 2007 -  YASC.png",
+	"frame": {"x":384,"y":832,"w":320,"h":640},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":640},
+	"sourceSize": {"w":320,"h":640}
+},
+{
+	"filename": "Cratekeeper - Doreen and Rainer Kaufmann - YASC.png",
+	"frame": {"x":1328,"y":1720,"w":160,"h":320},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":320},
+	"sourceSize": {"w":160,"h":320}
+},
+{
+	"filename": "Happy Face - Barbara Chamberlin - YASC.png",
+	"frame": {"x":440,"y":1472,"w":288,"h":576},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":288,"h":576},
+	"sourceSize": {"w":288,"h":576}
+},
+{
+	"filename": "Jumanji 2 - Gerry Wiseman YASC.png",
+	"frame": {"x":1024,"y":640,"w":300,"h":600},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":600},
+	"sourceSize": {"w":300,"h":600}
+},
+{
+	"filename": "KSokoban Cross - Anders Widell - YASC.png",
+	"frame": {"x":0,"y":832,"w":384,"h":768},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":384,"h":768},
+	"sourceSize": {"w":384,"h":768}
+},
+{
+	"filename": "Lilliput - Gerry Wiseman - YASC.png",
+	"frame": {"x":1040,"y":1240,"w":288,"h":576},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":288,"h":576},
+	"sourceSize": {"w":288,"h":576}
+},
+{
+	"filename": "Metal - Gerry Wiseman - 2002 - YASC.png",
+	"frame": {"x":1328,"y":1176,"w":272,"h":544},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":272,"h":544},
+	"sourceSize": {"w":272,"h":544}
+},
+{
+	"filename": "Metallica Star - Gerry Wiseman - YASC.png",
+	"frame": {"x":1600,"y":1176,"w":272,"h":544},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":272,"h":544},
+	"sourceSize": {"w":272,"h":544}
+},
+{
+	"filename": "Moonstar - Barbara Chamberlin - YASC.png",
+	"frame": {"x":1324,"y":600,"w":288,"h":576},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":288,"h":576},
+	"sourceSize": {"w":288,"h":576}
+},
+{
+	"filename": "Plastico A - Riccardo Riva - YASC.png",
+	"frame": {"x":416,"y":0,"w":320,"h":640},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":640},
+	"sourceSize": {"w":320,"h":640}
+},
+{
+	"filename": "Plastico B - Riccardo Riva - YASC.png",
+	"frame": {"x":704,"y":640,"w":320,"h":640},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":640},
+	"sourceSize": {"w":320,"h":640}
+},
+{
+	"filename": "Pocoman - 1989 - YASC.png",
+	"frame": {"x":1356,"y":0,"w":280,"h":560},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":280,"h":560},
+	"sourceSize": {"w":280,"h":560}
+},
+{
+	"filename": "Sokoban 97 Yellow - Gerald Holler - YASC.png",
+	"frame": {"x":728,"y":1280,"w":312,"h":624},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":312,"h":624},
+	"sourceSize": {"w":312,"h":624}
+},
+{
+	"filename": "SokoSave - Eric Sunshine - YASC.png",
+	"frame": {"x":736,"y":0,"w":320,"h":640},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":320,"h":640},
+	"sourceSize": {"w":320,"h":640}
+},
+{
+	"filename": "Text - Ziko - YASC.png",
+	"frame": {"x":1056,"y":0,"w":300,"h":600},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":300,"h":600},
+	"sourceSize": {"w":300,"h":600}
+},
+{
+	"filename": "XML Sokoban - Ilya Kozachenko - YASC.png",
+	"frame": {"x":224,"y":1600,"w":216,"h":432},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":216,"h":432},
+	"sourceSize": {"w":216,"h":432}
+},
+{
+	"filename": "XSokoban - YASC.png",
+	"frame": {"x":1488,"y":1720,"w":160,"h":320},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":320},
+	"sourceSize": {"w":160,"h":320}
+},
+{
+	"filename": "YSokoban Decorated B - George Petrov - YASC.png",
+	"frame": {"x":0,"y":0,"w":416,"h":832},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":416,"h":832},
+	"sourceSize": {"w":416,"h":832}
+}],
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "sheets-0.png",
+	"format": "RGBA8888",
+	"size": {"w":1892,"h":2048},
+	"scale": "1",
+	"related_multi_packs": [ "sheets-1.json", "sheets-2.json", "sheets-3.json" ],
+	"smartupdate": "$TexturePacker:SmartUpdate:f3f64f6f4fc7086a2bf2552ba8bc1a1a:01614a861dcbe49dc707e7f8af9c5650:985a3021f0111fe1b658c8ffe726ca4f$"
+}
+}
