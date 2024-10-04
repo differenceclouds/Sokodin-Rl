@@ -9,6 +9,7 @@ import "core:slice"
 
 
 GuiData :: struct {
+	font: rl.Font,
 	edit_mode: bool,
 	set_result: i32,
 	change_set: bool,
@@ -16,39 +17,30 @@ GuiData :: struct {
 	sets_param: cstring,
 	tilemap_inc: bool,
 	tilemap_dec: bool,
+	randomize: bool,
 }
 
 
-// GetSetsParam :: proc(file_list: []os.File_Info) -> cstring {
-// 	filenames := [dynamic]string {}
-
-
-
-// 	for fi in file_list {
-// 		if !fi.is_dir && !strings.has_prefix(fi.name, ".") {
-// 			// fmt.printfln(fi.name)
-// 			append(&filenames, strings.trim_suffix(fi.name, ".txt"))
-// 		}
-// 	}
-// 	slice.sort(filenames[:])
-// 	inject_at(&filenames,0, "SELECT LEVEL SET")
-// 	return strings.clone_to_cstring(strings.join(filenames[:], ";"))
-// }
-
 GetSetsParam :: proc(set_of_sets: []string) -> cstring {
-	set_titles := make([dynamic]string, len(set_of_sets))
+	set_titles := make([]string, len(set_of_sets))
 	defer delete(set_titles)
 	for set, i in set_of_sets {
-		set_titles[i] = strings.trim_suffix(set, ".txt")
+		set_titles[i] = get_set_title(set)
 	}
-	return strings.clone_to_cstring(strings.join(set_titles[:], ";"))
+	j := strings.join(set_titles[:], ";")
+	defer delete (j)
+	return to_cstring(j)
 }
 
 InitGui :: proc(set_of_sets: []string, set_index: int) -> GuiData {
 	// rl.GuiLoadStyle("./rgui/style_sunny.rgs")
+	// rl.GuiSetStyle(.STATUSBAR, .TEXT_ALIGNMENT, .TEXT_ALIGN_CENTER)
+
 	return GuiData {
+		font = rl.GuiGetFont(),
 		set_result = i32(set_index),
-		sets_param = GetSetsParam(set_of_sets)
+		sets_param = GetSetsParam(set_of_sets),
+		randomize = false
 	}
 }
 
@@ -64,7 +56,11 @@ DrawGui :: proc(window: ^Window, data: ^GuiData) {
 
 	x:f32 = pad
 	r:f32 = w - pad
-	
+	y:f32 = -1
+
+	// rl.GuiStatusBar({x, y, f32(rl.MeasureText(window.title, 14)), unit}, window.title)
+	statusbar_width := rl.MeasureTextEx(font, window.title, 18, 0)
+	rl.GuiStatusBar({x, y, statusbar_width[0], unit}, window.title)
 
 	// // c:f32 = f32(window.width / 2)
 
@@ -97,20 +93,27 @@ DrawGui :: proc(window: ^Window, data: ^GuiData) {
 	//FROM RIGHT
 
 
-	if rl.GuiDropdownBox({r - unit*6, pad, unit*6, unit}, sets_param, &set_result, edit_mode) {
+	if rl.GuiDropdownBox({r - unit*6, y, unit*6, unit}, sets_param, &set_result, edit_mode) {
 		edit_mode = !edit_mode
 		change_set = true
 	}
 	r -= unit*6 + pad
 
-	if rl.GuiButton({r - unit*6, pad, unit*6, unit}, "#191#Show Controls") do show_controls = true
+	if rl.GuiButton({r - unit*6, y, unit*6, unit}, "#191#Show Controls") do show_controls = true
 	r -= unit*6 + pad
 
 
-	if rl.GuiButton({r - unit, pad, unit, unit}, "#119#") do tilemap_inc = true
+	if rl.GuiButton({r - unit, y, unit, unit}, "#119#") do tilemap_inc = true
 	r -= unit + pad
 
-	if rl.GuiButton({r - unit, pad, unit, unit}, "#118#") do tilemap_dec = true
+	if rl.GuiButton({r - unit, y, unit, unit}, "#118#") do tilemap_dec = true
+	r -= unit + pad
+
+	if !randomize {
+		if rl.GuiButton({r - unit, y, unit, unit}, "#62#") do randomize = !randomize
+	} else {
+		if rl.GuiButton({r - unit, y, unit, unit}, "#78#") do randomize = !randomize
+	}
 	r -= unit + pad
 
 	//FROM CENTER

@@ -5,10 +5,10 @@
 			"path": ".",
 		},
 		{
-			"path": "/Users/Radagast/Odin/core",
+			"path": "~/Odin/core",
 		},
 		{
-			"path": "/Users/Radagast/Odin/vendor"
+			"path": "~/Odin/vendor",
 		},
 	],
 	"build_systems":
@@ -30,4 +30,21 @@
 			},
 		},
 	},
+	"debugger_configurations":
+	[
+		{
+			"type": "lldb",
+			"request": "attach",
+			"name": "Attach",
+			"program": "${folder}/sokoban"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Launch",
+			"program": "${folder}/sokoban",
+			"args": [],
+			"cwd": "${folder}"
+		},
+	],
 }

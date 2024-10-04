@@ -9,6 +9,7 @@ import "core:slice"
 print_file_info :: proc(fi: os.File_Info) {
     // Split the path into directory and filename
     _, filename := filepath.split(fi.fullpath)
+    // defer delete(filename)
 
     SIZE_WIDTH :: 12
     buf: [SIZE_WIDTH]u8
@@ -29,11 +30,15 @@ print_file_info :: proc(fi: os.File_Info) {
 
 GetSetOfSets :: proc(directory: string) -> []string {
     file_list := read_directory(directory)
-    // defer os.file_info_slice_delete(file_list)
-    filenames := [dynamic]string {}
+    defer os.file_info_slice_delete(file_list)
+    // for file, i in file_list {
+    //     fmt.print(i)
+    //     fmt.printfln(file.name)
+    // }
+    filenames := make([dynamic]string)
     for fi in file_list {
         if !fi.is_dir && !strings.has_prefix(fi.name, ".") {
-            append(&filenames, fi.name)
+            append(&filenames, strings.clone(fi.name, context.temp_allocator))
         }
     }
     slice.sort(filenames[:])
@@ -42,11 +47,12 @@ GetSetOfSets :: proc(directory: string) -> []string {
 
 read_directory :: proc(_dir: string) -> []os.File_Info {
     start_dir := os.get_current_directory()
+    defer delete(start_dir)
     defer os.set_current_directory(start_dir)
 
     os.set_current_directory(_dir)
-
     cwd := os.get_current_directory()
+    defer delete(cwd)
 
     f, err := os.open(cwd)
     defer os.close(f)
@@ -69,6 +75,7 @@ read_directory :: proc(_dir: string) -> []os.File_Info {
     // for fi in fis {
     //     print_file_info(fi)
     // }
+
 
     return fis
 }

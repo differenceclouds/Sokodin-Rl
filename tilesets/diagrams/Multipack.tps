@@ -143,7 +143,7 @@
         <key>autoAliasEnabled</key>
         <false/>
         <key>trimSpriteNames</key>
-        <false/>
+        <true/>
         <key>prependSmartFolderName</key>
         <false/>
         <key>autodetectAnimations</key>
@@ -277,7 +277,6 @@
             <key type="filename">../YASC/XSok - Michael Bischoff - YASC.png</key>
             <key type="filename">../YASC/XSok Red - Michael Bischoff - YASC.png</key>
             <key type="filename">../YASC/XSok for Mac - Michael Bischoff - YASC.png</key>
-            <key type="filename">../YASC/Yoshi Classic - Borgar Thorsteinsson - YASC.png</key>
             <key type="filename">../YASC/Yoshi Red - YASC.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -308,7 +307,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../YASC/Blue - Barbara Chamberlin - YASC.png</key>
             <key type="filename">../YASC/Blue Granite - Merlinj W - 2004 - YASC.png</key>
             <key type="filename">../YASC/BoxWorld Indigo - YASC.png</key>
             <key type="filename">../YASC/Boxes - Gilles Merour - 2001 - YASC.png</key>
@@ -385,7 +383,6 @@
                 <false/>
             </struct>
             <key type="filename">../YASC/Jumanji 2 - Gerry Wiseman YASC.png</key>
-            <key type="filename">../YASC/Text - Ziko - YASC.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -400,7 +397,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../YASC/KSokoban Cross - Anders Widell - YASC edit.png</key>
+            <key type="filename">../YASC/KSokoban Cross - Anders Widell - YASC.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -446,10 +443,6 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">../YASC/Sokoban 97 Blue - Gerald Holler - YASC.png</key>
-            <key type="filename">../YASC/Sokoban 97 Green - Gerald Holler - YASC.png</key>
-            <key type="filename">../YASC/Sokoban 97 Purple - Gerald Holler - YASC.png</key>
-            <key type="filename">../YASC/Sokoban 97 Red - Gerald Holler - YASC.png</key>
             <key type="filename">../YASC/Sokoban 97 Yellow - Gerald Holler - YASC.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

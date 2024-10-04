@@ -1,11 +1,20 @@
 package sokoban
 
+
 import "core:fmt"
 import "core:strings"
 import "core:strconv"
 import "core:math/rand"
 import rl "vendor:raylib"
 
+//memory debug imports
+import "core:log"
+import "core:mem"
+import "core:c/libc"
+
+
+
+DEBUG_MEM :: true
 
 Window :: struct { 
 	title:          cstring,
@@ -13,7 +22,6 @@ Window :: struct {
 	height:        i32,
 	fps:           i32,
 	control_flags: rl.ConfigFlags,
-
 	resize_flag: bool,
 }
 
@@ -27,7 +35,7 @@ World :: struct {
 Puzzle :: struct {
 	title: cstring,
 	title_bar: cstring,
-	tiles: []u8,
+	tiles: string,
 	width: i32,
 	height: i32,
 	probably_unwinnable: bool,
@@ -116,18 +124,25 @@ User_Input :: struct {
 
 
 
-draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
+draw_world_tiles :: #force_inline proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
 	x, y : i32
+
+	
+
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
 			
 			index := y * world.width + x
 			tileType := world.tiles[index]
-			source_rect := rects[world.tiles[index]]
+
+			source_rect: rl.Rectangle
+			if tileType == .Wall && tilemap.options.drawBlobWalls {
+
+			} else {
+				source_rect = rects[tileType]
+			}
 
 			rotation:f32 = 0
-
-
 			
 			if processPlayer && (tileType == .Player || tileType == .PlayerOnGoal) {
 				switch tilemap.options.playerTileStyle {
@@ -159,7 +174,10 @@ draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, rects: [
 					if player.direction == .left do source_rect.width *= -1
 					else if player.direction == .down do source_rect.height *= -1
 				}
+				// source_rect.x += f32((rand.float32() - 0.5) * 100) * source_rect.width
+				// source_rect.y += f32((rand.float32() - 0.5) * 100) * source_rect.width
 			}
+
 
 
 			dest_rect := rl.Rectangle {
@@ -169,152 +187,38 @@ draw_world_tiles :: #force_inline proc(world: ^World, tilemap: Tilemap, rects: [
 				tilemap.h,
 			}
 
-
 			color := rl.WHITE
 			if source_rect == {} do color = rl.BLANK
 
-			// blobwall := tilemap.options.drawBlobWalls && tileType == .Wall
-			// if !blobwall {
-				rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, color)				
-			// } else {
-			// 	drawBlobWall(world, tilemap, x, y)
+			// if !tilemap.options.singleLayer {
+			// 	b_source: rl.Rectangle
+			// 	switch tileType {
+			// 		case .Void:
+			// 		case .Wall, .Box, .Player:
+			// 			b_source 
+			// 		case .PlayerOnGoal:
+			// 		case .BoxOnGoal:
+			// 		case .Goal:
+			// 		case .Floor:
+			// 		case .Void2:
+			// 	}
 			// }
+
+			rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, color)				
 		}
 	}
 }
 
+drawtile :: proc() {
 
-// drawBlobWall :: proc(world: ^World, tilemap: Tilemap, x: i32, y: i32) {
-// 	i := y * world.width + x
-
-// 	neighbors: Blob_Set = {}
-
-
-// 	// if world.tiles[i - world.width] == Tile.Wall 	do neighbors |= {.N}
-// 	// if world.tiles[i + 1] == Tile.Wall 				do neighbors |= {.E}
-// 	// if world.tiles[i + world.width] == Tile.Wall 	do neighbors |= {.S}
-// 	// if world.tiles[i - 1] == Tile.Wall 				do neighbors |= {.W}
-
-// 	// if world.tiles[i - world.width + 1] == Tile.Wall do neighbors |= {.ne}
-// 	// if world.tiles[i + world.width + 1] == Tile.Wall do neighbors |= {.se}
-// 	// if world.tiles[i + world.width - 1] == Tile.Wall do neighbors |= {.sw}
-// 	// if world.tiles[i - world.width - 1] == Tile.Wall do neighbors |= {.nw}
-
-// 	N : bool = world.tiles[i - world.width] == Tile.Wall
-// 	E : bool = world.tiles[i + 1] == Tile.Wall
-// 	S : bool = world.tiles[i + world.width] == Tile.Wall
-// 	W : bool = world.tiles[i - 1] == Tile.Wall
-
-// 	//Upper left
-// 	if N, 
-
-// }
-
-
-measure_puzzle :: #force_inline proc(puzzle: ^Puzzle) {
-	x, y : i32
-	width : i32 = 0
-	height : i32 = 0
-	for tile in puzzle.tiles {
-		switch tile {
-			case '\n', '|':
-				y += 1
-				x = 0
-			case '-','_','#','@','+','$','*','.',' ':
-				x += 1
-		}
-		if x > width do width = x
-		if y > height do height = y
-	}
-	puzzle.width = width - 1
-	puzzle.height = height - 1
-}
-
-set_puzzle :: #force_inline proc(_puzzle: Puzzle, world: ^World, next_world: ^World, player: ^Player, record: ^Record, new_record := Record {}) -> Puzzle {
-
-	puzzle := _puzzle
-
-	record^ = new_record
-
-	for tile, index in next_world.tiles {
-		next_world.tiles[index] = Tile.Void
-	}
-
-	x, y : i32
-	puzzle.worldOrigin = { (world.width - puzzle.width) / 2, (world.height - puzzle.height) / 2 }
-	initX, initY := puzzle.worldOrigin.x, puzzle.worldOrigin.y
-	x, y = initX, initY
-
-	encountered_tile_on_row := false
-
-	boxes := 0
-	goals := 0
-
-	for tile in puzzle.tiles {
-		switch tile {
-			case '\n', '|':
-				y += 1
-				x = initX
-				encountered_tile_on_row = false
-			case '-','_':
-				next_world.tiles[y * world.width + x] = Tile.Void
-				x += 1
-			case '#':
-				next_world.tiles[y * world.width + x] = Tile.Wall
-				encountered_tile_on_row = true
-				x += 1
-			case '@':
-				player^ = {x, y, .resting, .up}
-				next_world.tiles[y * world.width + x] = Tile.Player
-				encountered_tile_on_row = true
-				x += 1
-			case '+':
-				player^ = {x, y, .resting, .up}
-				next_world.tiles[y * world.width + x] = Tile.PlayerOnGoal
-				encountered_tile_on_row = true
-				x += 1
-				goals += 1
-			case '$':
-				next_world.tiles[y * world.width + x] = Tile.Box
-				encountered_tile_on_row = true
-				x += 1
-				boxes += 1
-			case '*':
-				next_world.tiles[y * world.width + x] = Tile.BoxOnGoal
-				encountered_tile_on_row = true
-				x += 1
-				boxes += 1
-				goals += 1
-			case '.':
-				next_world.tiles[y * world.width + x] = Tile.Goal
-				encountered_tile_on_row = true
-				x += 1
-				goals += 1
-			case ' ':
-				if (encountered_tile_on_row) {
-					next_world.tiles[y * world.width + x] = Tile.Floor
-				} else {
-					next_world.tiles[y * world.width + x] = Tile.Void
-				}
-				
-				x += 1
-		}
-	}
-
-	if (boxes != goals) {
-		puzzle.probably_unwinnable = true
-	}
-
-	return puzzle
 }
 
 check_for_win :: proc(world: World) -> bool {
-	x, y : i32
 	boxes := 0
 	goals := 0
 	boxesOnGoals := 0
-	for y = 0; y < world.height; y += 1 {
-		for x = 0; x < world.width; x += 1 {
+	for y:i32 = 0; y < world.height; y += 1 {
+		for x:i32 = 0; x < world.width; x += 1 {
 			index := y * world.width + x
 			#partial switch world.tiles[index] {
 				case Tile.Box:
@@ -328,9 +232,11 @@ check_for_win :: proc(world: World) -> bool {
 			}
 		}
 	}
+
 	if boxes == 0 && goals == 0 && boxesOnGoals > 0 {
 		return true
 	}
+
 	return false
 }
 
@@ -424,8 +330,9 @@ reverse_move :: proc(move: Move_Type, _player: Player, world: ^World) -> (new_pl
 
 
 
-SelectPuzzleSet :: proc(directory: string, filename: string) -> [dynamic]Puzzle{
-	return read_puzzle_file(strings.concatenate({directory, filename})).puzzles
+SelectPuzzleSet :: proc( directory: string, filename: string) -> []Puzzle {
+	path := strings.concatenate({directory, filename}, context.temp_allocator)
+	return read_puzzle_file(path)
 }
 
 UpdateWindowTitle :: proc(title:cstring, window: ^Window) {
@@ -443,7 +350,12 @@ SetCamera :: proc(camera: ^rl.Camera2D, window: Window, world: World, tilemap: T
 	}
 }
 
-main :: proc() {
+
+
+
+// run_game :: proc(tracking_allocator : mem.Tracking_Allocator) {
+run_game :: proc() {
+// main :: proc() {
 	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE }, false}
 
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
@@ -454,6 +366,15 @@ main :: proc() {
 	rl.SetWindowState( window.control_flags )
 	rl.SetTargetFPS(window.fps)
 	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
+	rl.InitAudioDevice()
+
+	Sounds : []rl.Sound = {
+		rl.LoadSound("./sounds/chip/bummer.wav"),
+		rl.LoadSound("./sounds/chip/exit.wav"),
+		rl.LoadSound("./sounds/chip/push.wav"),
+		rl.LoadSound("./sounds/chip/socket.wav"),
+		rl.LoadSound("./sounds/stone1.wav")
+	}
 
 	game := Game {
 		pause     = true,
@@ -473,19 +394,21 @@ main :: proc() {
 	initial_player : Player
 	player : Player
 	record := Record {}
-
-
+	// defer clear_dynamic_array(&record.moves)
+	defer delete(record.moves)
 
 
 
 	set_of_sets := GetSetOfSets("./levels/")
+	defer delete(set_of_sets)
+
 	set_index :int
 	set_index, game.puzzle_index = SimpleLoad(set_of_sets)
 	if set_index == -1  {
 		game.puzzle_index = 0
 		set_index = 0
 		for title, i in set_of_sets {
-			if title == "Microban.txt" do set_index = i
+			if strings.has_suffix(title, "Microban.txt")  do set_index = i
 		}
 	} else {
 		if game.puzzle_index == -1 {
@@ -498,17 +421,19 @@ main :: proc() {
 
 	puzzle_set := SelectPuzzleSet("./levels/", set_of_sets[set_index])
 	puzzle := set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
+	defer delete(puzzle_set)
+
 	world, next_world = next_world, world
 	UpdateWindowTitle(puzzle.title_bar, &window)
 
-
-
-	tilemap_list := LoadVariousTilemaps()
+	tilemap_list := make([dynamic]Tilemap)
+	LoadVariousTilemaps(&tilemap_list)
 	InitSheets("sheets-0", &tilemap_list)
 	InitSheets("sheets-1", &tilemap_list)
 	InitSheets("sheets-2", &tilemap_list)
 	InitSheets("sheets-3", &tilemap_list)
 
+	defer delete(tilemap_list)
 
 	tilemap_index := 0
 	tilemap := tilemap_list[tilemap_index]
@@ -629,9 +554,11 @@ main :: proc() {
 
 
 
-
+		//single frame states
 		moved := false
 		movedBox := false
+		movedBoxOntoGoal := false
+		justWon := false
 
 		if (player != front && !undo) {
 			prevTile := world.tiles[player.y    * world.width + player.x]
@@ -687,7 +614,9 @@ main :: proc() {
 						world.tiles[leap.y * world.width + leap.x] = Tile.Box
 					case Tile.Goal:
 						world.tiles[leap.y * world.width + leap.x] = Tile.BoxOnGoal
+						movedBoxOntoGoal = true
 						if check_for_win(world) {
+							justWon = true
 							state = .YouWin
 							// hi_score = DoWin(record, puzzle_index, &game.save)
 							SimpleSave(record, puzzle_index, set_of_sets[set_index])	
@@ -710,12 +639,25 @@ main :: proc() {
 
 			}
 
-			if (moved || movedBox) {
+			if (moved) {
 				moveCount += 1
 				append(&record.moves, possible_move)
-				// chars := MakeMoveChars(record.moves[:])
-				// fmt.println(strings.clone_from_bytes(chars[:]))
 			}
+		}
+
+ 		if movedBoxOntoGoal {
+			rl.PlaySound(Sounds[3])
+		} else if movedBox {
+			rl.PlaySound(Sounds[2])
+		}
+		else if moved {
+			rl.PlaySound(Sounds[4])
+		}
+
+		if justWon {
+			rl.PlaySound(Sounds[1])
+		} else if user_input.reset {
+			rl.PlaySound(Sounds[0])
 		}
 
 
@@ -730,7 +672,10 @@ main :: proc() {
 		}
 		if (next_index != game.puzzle_index || user_input.reset) {
 			game.puzzle_index = next_index
-			randomize = true
+			if gui_data.randomize {
+				randomize = true				
+			}
+			// SetWindowIcon(tilemap)
 			puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 			world, next_world = next_world, world
 			UpdateWindowTitle(puzzle_set[game.puzzle_index].title_bar, &window)
@@ -746,7 +691,7 @@ main :: proc() {
 				if p != -1 {
 					game.puzzle_index = p + 1
 				}
-
+				delete(puzzle_set)
 				puzzle_set = SelectPuzzleSet("./levels/", set_of_sets[set_index])
 				puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 				world, next_world = next_world, world
@@ -758,7 +703,7 @@ main :: proc() {
 
 		tilemap_updated : bool
 
-
+		do_mix := gui_data.randomize && movedBox
 
 		if gui_data.tilemap_inc || user_input.tilemap_inc {
 			tilemap_index = (tilemap_index + 1) %% len(tilemap_list)
@@ -769,19 +714,19 @@ main :: proc() {
 			gui_data.tilemap_dec = false
 			tilemap_updated = true
 
-		} else if user_input.up && movedBox {
+		} else if user_input.up && do_mix {
 			tilemap_index = (tilemap_index + 7) %% len(tilemap_list)
 			gui_data.tilemap_dec = false
 			tilemap_updated = true
-		} else if user_input.right && movedBox {
+		} else if user_input.right && do_mix {
 			tilemap_index = (tilemap_index + 6) %% len(tilemap_list)
 			gui_data.tilemap_dec = false
 			tilemap_updated = true
-		} else if user_input.down && movedBox  {
+		} else if user_input.down && do_mix  {
 			tilemap_index = (tilemap_index - 7) %% len(tilemap_list)
 			gui_data.tilemap_dec = false
 			tilemap_updated = true
-		} else if user_input.left && movedBox {
+		} else if user_input.left && do_mix {
 			tilemap_index = (tilemap_index - 6) %% len(tilemap_list)
 			gui_data.tilemap_dec = false
 			tilemap_updated = true
@@ -835,8 +780,10 @@ main :: proc() {
 
 
 			rl.BeginMode2D(camera)
-		    	draw_world_tiles(&world, tilemap, tilerenderer.baseLayerRects, player, false)
-		    	draw_world_tiles(&world, tilemap, tilerenderer.objectLayerRects, player, true)
+				if !tilemap.options.singleLayer {
+			    	draw_world_tiles(world, tilemap, tilerenderer.baseLayerRects, player, false)
+				}
+		    	draw_world_tiles(world, tilemap, tilerenderer.objectLayerRects, player, true)
 		    rl.EndMode2D()
 
 		    if state == .YouWin {
@@ -846,7 +793,7 @@ main :: proc() {
 		    	rl.DrawText(message, x, 96, 30, rl.RAYWHITE)
 
 		    	if hi_score {
-		    		hs :cstring= "NEW RECORD"
+		    		hs :cstring = "NEW RECORD"
 		    		x = window.width / 2 - rl.MeasureText(hs, 30) / 2
 		    		rl.DrawText(hs, x - 2, 130, 30, rl.MAGENTA)
 		    		rl.DrawText(hs, x, 132, 30, rl.YELLOW)
@@ -865,7 +812,7 @@ main :: proc() {
 		    		"zoom: ",
 		    		strconv.itoa(buf[:], int(camera.zoom * 100) )
 		    	}
-		    	hud_message := strings.clone_to_cstring(strings.concatenate(ss[:]))
+		    	hud_message := to_cstring(strings.concatenate(ss[:]))
 		    	rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
 		    }
@@ -880,12 +827,52 @@ YW : []string = {"Solved in ",""," moves! Try the next one?"}
 YouWinMessage :: proc(moves: int) -> cstring {
 	buf: [64]u8 = ---
 	YW[1] = strconv.itoa(buf[:], moves )
-	return strings.clone_to_cstring(strings.concatenate(YW[:]))
+	m := strings.concatenate(YW[:])
+	defer delete(m)
+	return to_cstring(m)
 }
 UnsolvableMessage :: "this puzzle is unsolvable... press ] to skip"
 
 
+main :: proc() {
+    tracking_allocator : mem.Tracking_Allocator
+    // when DEBUG_MEM {
+        context.logger = log.create_console_logger()
+        default_allocator := context.allocator
+        mem.tracking_allocator_init(&tracking_allocator, default_allocator)
+        context.allocator = mem.tracking_allocator(&tracking_allocator)
+        reset_tracking_allocator :: proc(a: ^mem.Tracking_Allocator) -> bool {
+            err := false
 
+            for _, value in a.allocation_map {
+                fmt.printf("%v: Leaked %v bytes\n", value.location, value.size)
+                err = true
+            }
+
+            mem.tracking_allocator_clear(a)
+            return err
+        }
+    // }
+
+    // run_game(tracking_allocator)
+    run_game()
+
+
+    when DEBUG_MEM {
+        if len(tracking_allocator.bad_free_array) > 0 {
+            for b in tracking_allocator.bad_free_array {
+                log.errorf("Bad free at: %v", b.location)
+            }
+
+            // libc.getchar()
+            panic("Bad free detected")
+        }
+        if reset_tracking_allocator(&tracking_allocator) {
+            // libc.getchar()
+        }
+    }
+    mem.tracking_allocator_destroy(&tracking_allocator)
+}
 
 
 

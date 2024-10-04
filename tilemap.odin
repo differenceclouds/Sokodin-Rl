@@ -28,7 +28,7 @@ Tile :: enum {
 	BoxOnGoal,
 	Goal,
 	Floor,
-
+	Void2,
 }
 
 TileRenderer :: struct {
@@ -48,6 +48,7 @@ TileRendererOptions :: struct {
 	defaultPlayerOnRest: bool,
 	defaultZoom: f32,
 	drawBlobWalls: bool,
+	singleLayer: bool,
 }
 
 //These are optional player "animation" tiles
@@ -122,33 +123,33 @@ WallTilesBlob :: enum {
 Blob_Set :: bit_set[WallTilesBlob]
 
 
-	YASCTiles :: []rl.Vector2 {
-		{3,2}, //void
-		{1,3}, //wall
-		{1,0}, //player
-		{1,1}, //player on goal
-		{2,0}, //box
-		{2,1}, //box on goal
-		{0,1}, //goal
-		{0,0}, //floor
+YASCTiles :: []rl.Vector2 {
+	{3,2}, //void
+	{1,3}, //wall
+	{1,0}, //player
+	{1,1}, //player on goal
+	{2,0}, //box
+	{2,1}, //box on goal
+	{0,1}, //goal
+	{0,0}, //floor
 
-		{1,0}, //player resting
-		{1,0}, //player walking
-		{1,0}, //player pushing neutral
-		{1,0}, //player walking odd frame
-		{1,0}, //player pushing even frame
-		{1,0}, //player pushing odd frame,
+	{1,0}, //player resting
+	{1,0}, //player walking
+	{1,0}, //player pushing neutral
+	{1,0}, //player walking odd frame
+	{1,0}, //player pushing even frame
+	{1,0}, //player pushing odd frame,
 
-		{0,4}, //player Up
-		{3,4}, //player Right
-		{2,4}, //player Down
-		{1,4}, //player Left
+	{0,4}, //player Up
+	{3,4}, //player Right
+	{2,4}, //player Down
+	{1,4}, //player Left
 
-		{0,5}, //player on goal, Up
-		{3,5}, //player on goal, Right
-		{2,5}, //player on goal, Down
-		{1,5}, //player on goal, Left
-	}
+	{0,5}, //player on goal, Up
+	{3,5}, //player on goal, Right
+	{2,5}, //player on goal, Down
+	{1,5}, //player on goal, Left
+}
 
 YASCWallTiles :: []rl.Vector2 {
 	{0,2}, // NESW
@@ -163,7 +164,8 @@ YASCOptions : TileRendererOptions = {
 	playerTileStyle = .EightTileDirectional,
 	defaultZoom = 0,
 	defaultPlayerOnRest = true,
-	drawBlobWalls = false
+	drawBlobWalls = false,
+	singleLayer = false,
 }
 
 
@@ -202,7 +204,7 @@ SetTileRenderer :: proc(tilemap: Tilemap) -> TileRenderer{
 
 
 	tr.baseLayerRects[0] = voidRect //void
-	tr.baseLayerRects[1] = RectFromCoord(tilemap.tileCoords[1], tilemap) //wall
+	tr.baseLayerRects[1] = RectFromCoord(tilemap.tileCoords[7], tilemap) //wall, draw floor
 	tr.baseLayerRects[2] = RectFromCoord(tilemap.tileCoords[7], tilemap) //player, draw floor
 	tr.baseLayerRects[3] = RectFromCoord(tilemap.tileCoords[6], tilemap) //player on goal, draw goal
 	tr.baseLayerRects[4] = RectFromCoord(tilemap.tileCoords[7], tilemap) //box, draw floor
@@ -218,38 +220,29 @@ SetTileRenderer :: proc(tilemap: Tilemap) -> TileRenderer{
 }
 
 
-MultiSheet :: struct {
-	texture: rl.Texture2D,
+InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 
-}
 
-// LoadTilemapFromSheet :: proc(sheet: MultiSheet) -> Tilemap {
-
-// }
-
-InitSheets :: #force_inline proc(sheet: string tilemaps: ^[dynamic]Tilemap) {
-
-	sheet0 := rl.LoadTexture(
-		strings.clone_to_cstring(strings.concatenate({
-		"./tilesets/sheets/", sheet, ".png"
-	})))
+	png := strings.concatenate({"./tilesets/sheets/", sheet, ".png"})
+	defer delete(png)
+	sheet0 := rl.LoadTexture(to_cstring(png))
 	
-	data, ok := os.read_entire_file_from_filename(strings.concatenate({
-		"./tilesets/sheets/", sheet, ".json"
-	}))
+	fn := strings.concatenate({"./tilesets/sheets/", sheet, ".json"})
+	defer delete (fn)
+	data, ok := os.read_entire_file_from_filename(fn)
 	if !ok {
 		fmt.eprintln("Couldn't load sheet")
 		return
 	}
 
-	// defer delete(data)
+	defer delete(data)
 
 	jason_data, err := json.parse(data)
 	if err != .None {
 		fmt.eprintln("couldn't parse json")
 		fmt.eprintln("Error:", err)
 	}
-	// defer json.destroy_value(jason_data)
+	defer json.destroy_value(jason_data)
 
 	frames := jason_data.(json.Object)["frames"].(json.Array)
 
@@ -257,13 +250,17 @@ InitSheets :: #force_inline proc(sheet: string tilemaps: ^[dynamic]Tilemap) {
 		// fmt.println(o)
 		object := o.(json.Object)
 		rect := object["frame"].(json.Object)
-
+		name := object["filename"].(json.String)
+		w := f32(rect["w"].(json.Float) / 4)
+		h := f32(rect["h"].(json.Float) / 8)
+		x := f32(rect["x"].(json.Float))
+		y := f32(rect["y"].(json.Float))
 		append(tilemaps, Tilemap {
-			object["filename"].(json.String),
+			name,
 			sheet0,
-			f32(rect["w"].(json.Float) / 4),
-			f32(rect["h"].(json.Float) / 8),
-			{f32(rect["x"].(json.Float)), f32(rect["y"].(json.Float))},
+			w,
+			h,
+			{x, y},
 			0,
 			YASCTiles, 
 			YASCWallTiles,
@@ -274,8 +271,8 @@ InitSheets :: #force_inline proc(sheet: string tilemaps: ^[dynamic]Tilemap) {
 }
 
 
-LoadVariousTilemaps :: #force_inline proc() -> [dynamic]Tilemap {
-	tilemaps : [dynamic]Tilemap = {}
+LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
+	// tilemaps : [dynamic]Tilemap = {}
 
 
 	shoveIt := Tilemap {
@@ -310,77 +307,77 @@ LoadVariousTilemaps :: #force_inline proc() -> [dynamic]Tilemap {
 			// defaultZoom = 2,
 		}
 	}
-	append(&tilemaps, shoveIt)
+	append(tilemaps, shoveIt)
 
 
-	sokobanPerfect := Tilemap {
-		"Sokoban Perfect.png",
-		rl.LoadTexture("./tilesets/Sokoban Perfect.png"),
-		40, 54,
-		{4, 4},
-		4,
-		{
-			{5,0}, //void
-			{2,0}, //wall
-			{4,1}, //player
-			{4,1}, //player on goal
-			{3,0}, //box
-			{4,0}, //box on goal
-			{1,0}, //goal
-			{0,0}, //floor
+	// sokobanPerfect := Tilemap {
+	// 	"Sokoban Perfect.png",
+	// 	rl.LoadTexture("./tilesets/Sokoban Perfect.png"),
+	// 	40, 54,
+	// 	{4, 4},
+	// 	4,
+	// 	{
+	// 		{5,0}, //void
+	// 		{2,0}, //wall
+	// 		{4,1}, //player
+	// 		{4,1}, //player on goal
+	// 		{3,0}, //box
+	// 		{4,0}, //box on goal
+	// 		{1,0}, //goal
+	// 		{0,0}, //floor
 
-			{4,1}, //player resting
-			{3,1}, //player walking
-			{4,2}, //player pushing neutral
-			{5,1}, //player walking odd frame
-			{5,2}, //player pushing even frame
-			{3,2}, //player pushing odd frame
+	// 		{4,1}, //player resting
+	// 		{3,1}, //player walking
+	// 		{4,2}, //player pushing neutral
+	// 		{5,1}, //player walking odd frame
+	// 		{5,2}, //player pushing even frame
+	// 		{3,2}, //player pushing odd frame
 
-			{4,1}, //player
-			{4,1}, //player
-			{4,1}, //player
-			{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
 
-			{4,1}, //player
-			{4,1}, //player
-			{4,1}, //player
-			{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
+	// 		{4,1}, //player
 
-			{4,1}, // player Up resting
-			{3,1}, // player Up walking even
-			{4,2}, // player Up pushing neutral
-			{5,1}, // player Up walking odd
-			{5,2}, // player Up pushing even
-			{3,2}, // player Up pushing odd
+	// 		{4,1}, // player Up resting
+	// 		{3,1}, // player Up walking even
+	// 		{4,2}, // player Up pushing neutral
+	// 		{5,1}, // player Up walking odd
+	// 		{5,2}, // player Up pushing even
+	// 		{3,2}, // player Up pushing odd
 
-			{1,1}, // player Right resting
-			{0,1}, // player Right walking even
-			{1,2}, // player Right pushing neutral
-			{2,1}, // player Right walking odd
-			{2,2}, // player Right pushing even
-			{0,2}, // player Right pushing odd
+	// 		{1,1}, // player Right resting
+	// 		{0,1}, // player Right walking even
+	// 		{1,2}, // player Right pushing neutral
+	// 		{2,1}, // player Right walking odd
+	// 		{2,2}, // player Right pushing even
+	// 		{0,2}, // player Right pushing odd
 
-			{4,1}, // player Down resting
-			{3,1}, // player Down walking even
-			{4,2}, // player Down pushing neutral
-			{5,1}, // player Down walking odd
-			{5,2}, // player Down pushing even
-			{3,2}, // player Down pushing odd
+	// 		{4,1}, // player Down resting
+	// 		{3,1}, // player Down walking even
+	// 		{4,2}, // player Down pushing neutral
+	// 		{5,1}, // player Down walking odd
+	// 		{5,2}, // player Down pushing even
+	// 		{3,2}, // player Down pushing odd
 
-			{1,1}, // player Left resting
-			{0,1}, // player Left walking even
-			{1,2}, // player Left pushing neutral
-			{2,1}, // player Left walking odd
-			{2,2}, // player Left pushing even
-			{0,2}, // player Left pushing odd
-		}, {},
-		{
-			playerTileStyle = .TwoDirectionWithPoses,
-			fixedPlayerRotation = true,
-			mirrorPlayerSprites = true,
-		}
-	}
-	append(&tilemaps, sokobanPerfect)
+	// 		{1,1}, // player Left resting
+	// 		{0,1}, // player Left walking even
+	// 		{1,2}, // player Left pushing neutral
+	// 		{2,1}, // player Left walking odd
+	// 		{2,2}, // player Left pushing even
+	// 		{0,2}, // player Left pushing odd
+	// 	}, {},
+	// 	{
+	// 		playerTileStyle = .TwoDirectionWithPoses,
+	// 		fixedPlayerRotation = true,
+	// 		mirrorPlayerSprites = true,
+	// 	}
+	// }
+	// append(&tilemaps, sokobanPerfect)
 	
 	// sneezingTiger := Tilemap {
 	// 	"sneezing_tiger.png",
@@ -411,8 +408,65 @@ LoadVariousTilemaps :: #force_inline proc() -> [dynamic]Tilemap {
 		YASCTiles, YASCWallTiles,
 		YASCOptions
 	}
-	append(&tilemaps, Chip2)
+	append(tilemaps, Chip2)
+
+	Chip3 := Tilemap {
+		"chip3.png",
+		rl.LoadTexture("./tilesets/chip3.png"),
+		32, 32,
+		{0, 0},
+		0,
+		YASCTiles, YASCWallTiles,
+		YASCOptions
+	}
+	append(tilemaps, Chip3)
+
+	Wren := Tilemap {
+		"wren",
+		rl.LoadTexture("./tilesets/wren3.png"),
+		32, 32,
+		{0,0},
+		0,
+		{
+			{3,3}, //void
+			{3,2}, //wall
+			{2,1}, //player
+			{2,1}, //player on goal
+			{1,2}, //box
+			{1,3}, //box on goal
+			{0,3}, //goal
+			{0,2}, //floor
+
+			{2,1}, //player resting
+			{0,1}, //player walking
+			{2,0}, //player pushing neutral
+			{1,1}, //player walking odd frame
+			{0,0}, //player pushing even frame
+			{1,0}, //player pushing odd frame
+		}, {},
+		{
+			disableVoidTile = false,
+			floorTileAsVoid = false,
+			renderBackgroundImage = false,
+			fixedPlayerRotation = false,
+			playerTileStyle = .SingleDirectionWithPoses,
+			// defaultZoom = 2,
+		}
+	}
+	append(tilemaps, Wren)
 
 
-	return tilemaps
+	// return tilemaps
 }
+
+
+//Windows only
+SetWindowIcon :: proc(tilemap: Tilemap) {
+	image := rl.LoadImageFromTexture(tilemap.texture)
+	rect := RectFromCoord({1,1}, tilemap)
+	icon := rl.ImageFromImage(image, rect)
+	rl.SetWindowIcon(icon)
+}
+
+
+

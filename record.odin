@@ -21,20 +21,12 @@ Move_Type :: enum {
 
 }
 
-// Move_List :: [dynamic] Move_Direction
-
-// RecordMove :: proc(direction: Move_Direction, moves: Move_List^) {
-// 	append(&moves, direction)
-// }
 
 Record :: struct {
-	// tiles: []u8,
 	moves: [dynamic]Move_Type,
-	// chars: [dynamic]u8
 }
 
 RecordData :: struct {
-	// user: string,
 	set_title: string,
 	puzzle_index: int,
 	chars: []u8
@@ -45,13 +37,14 @@ Save_Location :: "./save_log.txt"
 SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
 	buf: [64]u8 = ---
 
+	chars := MakeMoveChars(record.moves[:])
+
 	log_entry := strings.concatenate({
 		"\r\n",
 		";set: ", set_title,
 		" ;index: ", strconv.itoa(buf[:], puzzle_index),
-		" ;moves: ", string(MakeMoveChars(record.moves[:]))
+		" ;moves: ", string(chars)
 	})
-	defer delete(log_entry)
 
 	f, err := os.open(Save_Location, os.O_CREATE | os.O_APPEND | os.O_WRONLY, os.S_IRWXU)
 	defer os.close(f)
@@ -60,6 +53,8 @@ SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
 		os.exit(2)
 	}
 	os.write_string(f, log_entry)
+	delete(log_entry)
+	delete(chars)
 
 }
 
@@ -76,14 +71,16 @@ SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_inde
 	last_line: string
 	it := string(data)
 	for line in strings.split_lines_iterator(&it) {
-		if strings.has_prefix(line, strings.join({";set:", set_select}, " ")) do last_line = line
+		j := strings.join({";set:", set_select}, " ")
+		if strings.has_prefix(line, j) do last_line = line
+		delete(j)
 	}
 
 	if last_line == "" {
 		return -1, -1
 	}
 
-	for prop in strings.split(last_line, ";") {
+	for prop in strings.split(last_line, ";", context.temp_allocator) {
 		if strings.has_prefix(prop, "set:") {
 			set_title := strings.trim_space(
 				strings.trim_prefix(prop, "set:"))
@@ -107,65 +104,26 @@ SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_inde
 	return s, p
 }
 
-// SaveData :: struct {
-// 	user: string,
-// 	set_title: string,
-// 	set_hash: u32,
-// 	records: []RecordData,
-// }
-
-// DoWin :: proc(record: Record, puzzle_index: int, current_save: ^SaveData) -> (hi_score: bool) {
-// 	_hi_score: bool
-// 	data: RecordData = {
-// 		// puzzle_index,
-// 		MakeMoveChars(record.moves[:])
-// 	}
-	
-// 	data_present : bool
-// 	if len(current_save.records) > puzzle_index && len(current_save.records[puzzle_index].chars) > 0 {
-// 		data_present = true
-// 	}
-// 	if data_present && len(record.moves) > len(current_save.records[puzzle_index].chars)  {
-// 		_hi_score = true
-// 	}
-
-// 	if _hi_score || !data_present {
-// 		UpdateSaveData(data, puzzle_index, current_save)
-// 	}
-
-// 	return _hi_score
-// }
-
-
 
 
 MakeMoveChars :: proc(moves: []Move_Type) -> []u8 {
-	chars := [dynamic]u8 {}
-	for move in moves {
-		WriteMoveChar(&chars, move)
+	chars := make([]u8, len(moves))
+	for move, i in moves {
+		char: u8
+		switch move {
+			case .Wait: 	char = 'W'
+			case .up: 		char = 'u'
+			case .right: 	char = 'r'
+			case .down: 	char = 'd'
+			case .left: 	char = 'l'
+			case .UpBox: 	char = 'U'
+			case .RightBox: char = 'R'
+			case .DownBox: 	char = 'D'
+			case .LeftBox: 	char = 'L'
+		}
+		chars[i] = char
 	}
 	return chars[:]
-}
-
-CharFromMove :: proc(move: Move_Type) -> u8 {
-	char: u8
-	switch move {
-		case .Wait: 	char = 'W'
-		case .up: 		char = 'u'
-		case .right: 	char = 'r'
-		case .down: 	char = 'd'
-		case .left: 	char = 'l'
-		case .UpBox: 	char = 'U'
-		case .RightBox: char = 'R'
-		case .DownBox: 	char = 'D'
-		case .LeftBox: 	char = 'L'
-	}
-	return char
-}
-
-WriteMoveChar :: proc(move_chars: ^[dynamic]u8, move: Move_Type) {
-	char := CharFromMove(move)
-	append(move_chars, char)
 }
 
 

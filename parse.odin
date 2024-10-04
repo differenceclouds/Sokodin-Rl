@@ -6,35 +6,7 @@ import "core:fmt"
 import "core:strconv"
 
 
-// PreSet :: struct {
-// 	title: string,
-// 	notes: 
-// }
 
-Set :: struct {
-	title: string,
-	notes: [dynamic]string,
-	puzzles: [dynamic]Puzzle,
-	hash: u32
-}
-
-InvalidFile: Set = {
-	title = "invalid puzzle set file"
-}
-
-PrePuzzle :: struct {
-	title: string,
-	lines: [dynamic]string,
-	set_index: string,
-	set_title: string,
-}
-
-
-
-Snapshot :: struct {
-	title: string,
-	notes: string,
-}
 
 ParsingState :: enum {
 	notes,
@@ -42,32 +14,40 @@ ParsingState :: enum {
 	puzzleRead,
 }
 
-read_puzzle_file :: proc(filepath: string) -> Set {
-    text, ok := os.read_entire_file(filepath)
+get_set_title :: proc(filename: string) -> string {
+	start := 0
+	end := len(filename)
+	if strings.has_prefix(filename, "_") do start = 4
+	if strings.has_suffix(filename, ".txt") do end = len(filename) - 4
+	return filename[start:end] 
+}
+
+read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) -> []Puzzle {
+    text, ok := os.read_entire_file(filepath, allocator)
     if !ok {
-        panic(strings.concatenate({"Unable to read ", filepath}))
+        panic(strings.concatenate({"Unable to read ", filepath}, allocator))
     }
 
-    it: string
-    {
-		a := [?]string { string(text), "\n"}
-		it = strings.concatenate(a[:])
-    }
+	it := strings.concatenate({ string(text), "\n\n\n" }, allocator)
 
 
-	set : Set = {}
-	
+	// set : Set = {}
+
+	set : [dynamic]Puzzle = {}
+	set_title : string
+	puzzle_title: string
+	lines: [dynamic]string = make([dynamic]string, allocator)
+	set_index: string
+
 	{
-		titlepath := strings.trim_suffix(filepath, ".txt")
-		ss := strings.split(titlepath, "/")
-		set.title = ss[len(ss) - 1]
+		ss := strings.split(filepath, "/")		
+		set_title = get_set_title(ss[len(ss) - 1])
+		delete(ss)
 	}
-
 
 	state : ParsingState = .notes
 	
-	holdingPuzzle : PrePuzzle = {}
-	defer delete(holdingPuzzle.lines)
+
 
 	puzzle_index : int = 1
 
@@ -81,33 +61,38 @@ read_puzzle_file :: proc(filepath: string) -> Set {
 		switch(state) {
 			case .notes:
 				if strings.has_prefix(line, ";") {
-					trim := strings.trim_left(line, "; ")
-					append(&set.notes, trim)
+					// trim := strings.trim_left(line, "; ")
+					// append(&set.notes, trim)
+					// delete (trim)
 				} else {
 					state = .puzzleInit
 				}
 			case .puzzleInit:
 				if check_prefixes(line, puzzle_title_prefixes) {
-					holdingPuzzle.title = line
+					puzzle_title = strings.trim_right_space(line)
 				}
-				holdingPuzzle.set_title = set.title
 				buf: [64]u8 = ---
-				holdingPuzzle.set_index = strconv.itoa(buf[:], puzzle_index)
+				set_index = strconv.itoa(buf[:], puzzle_index)
+
 			case .puzzleRead:
 				if line == "\n" {
-					append(&set.puzzles, puzzle_from_prepuzzle(holdingPuzzle))
+					puzzle := puzzle_from_prepuzzle(set_title, puzzle_title, set_index, lines[:])
+					append(&set, puzzle)
 					puzzle_index += 1
-					holdingPuzzle = PrePuzzle {}
+					clear_dynamic_array(&lines)
 					state = .puzzleInit
 				} else {
 					trim := strings.trim_right_space(line)
-					append(&holdingPuzzle.lines, trim)
+					append(&lines, trim)
+					// delete(trim)
 				}
 		}
 
 	}
-	return set
+	return set[:]
 }
+
+
 
 puzzle_line_prefixes: []string = {
 	" ","-", "_", "#", "@", "$", "*","."
@@ -117,15 +102,17 @@ puzzle_title_prefixes: []string = {
 	`'`, `"`
 }
 
-puzzle_from_prepuzzle :: proc(pre: PrePuzzle) -> Puzzle {
-	combine: string = strings.join(pre.lines[:], "\n")
-	titlebaritems := [?]string {pre.set_title, " #", pre.set_index, "  ", pre.title }
-	titlebar: string = strings.concatenate(titlebaritems[:])
-	// return readPuzzleString(combine, strings.clone_to_cstring(title))
+puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, set_index: string, lines: []string, ) -> Puzzle {
+	combine: string = strings.join(lines[:], "\n")
+	defer delete(combine)
+
+	titlebar: string = strings.concatenate({set_title, " #", set_index, "  ", puzzle_title })
+	defer delete(titlebar)
+
 	puzzle: Puzzle = {
-		title = strings.clone_to_cstring(pre.title),
-		title_bar = strings.clone_to_cstring(titlebar),
-		tiles = transmute([]u8)string(combine)
+		title = to_cstring(puzzle_title),
+		title_bar = to_cstring(titlebar),
+		tiles = fmt.tprintf("%v", combine)
 	}
 	measure_puzzle(&puzzle)
 	return puzzle
@@ -141,17 +128,146 @@ check_prefixes :: proc(line: string, prefixes: []string) -> bool {
 }
 
 
-// readPuzzleString :: proc(puzzlestring: string, _title: cstring) -> Puzzle {
-// 	puzzle: Puzzle = {
-// 		title = _title,
-// 		tiles = transmute([]u8)string(puzzlestring)
-// 	}
-// 	measure_puzzle(&puzzle)
-// 	return puzzle
-// }
 
+measure_puzzle :: #force_inline proc(puzzle: ^Puzzle) {
+	x, y : i32
+	width : i32 = 0
+	height : i32 = 0
+	for tile in puzzle.tiles {
+		switch tile {
+			case '\n', '|':
+				y += 1
+				x = 0
+			case '-','_','#','@','+','$','*','.',' ':
+				x += 1
+		}
+		if x > width do width = x
+		if y > height do height = y
+	}
+	puzzle.width = width - 1
+	puzzle.height = height - 1
+}
 
 readNotes :: proc() -> string {
 	notes := string {}
 	return notes
 }
+
+
+
+set_puzzle :: #force_inline proc(_puzzle: Puzzle, world: ^World, next_world: ^World, player: ^Player, record: ^Record) -> Puzzle {
+
+	puzzle := _puzzle
+	delete(record.moves)
+	record^ = Record{}
+
+	for tile, index in next_world.tiles {
+		next_world.tiles[index] = Tile.Void
+	}
+
+
+	x, y : i32
+	puzzle.worldOrigin = { (world.width - puzzle.width) / 2, (world.height - puzzle.height) / 2 }
+	initX, initY := puzzle.worldOrigin.x, puzzle.worldOrigin.y
+	x, y = initX, initY
+
+
+	boxes := 0
+	goals := 0
+
+	for tile in puzzle.tiles {
+		switch tile {
+			case '\n', '|':
+				y += 1
+				x = initX
+			case '-','_':
+				next_world.tiles[y * world.width + x] = Tile.Void
+				x += 1
+			case '#':
+				next_world.tiles[y * world.width + x] = Tile.Wall
+				x += 1
+			case '@':
+				player^ = {x, y, .resting, .up}
+				next_world.tiles[y * world.width + x] = Tile.Player
+				x += 1
+			case '+':
+				player^ = {x, y, .resting, .up}
+				next_world.tiles[y * world.width + x] = Tile.PlayerOnGoal
+				x += 1
+				goals += 1
+			case '$':
+				next_world.tiles[y * world.width + x] = Tile.Box
+				x += 1
+				boxes += 1
+			case '*':
+				next_world.tiles[y * world.width + x] = Tile.BoxOnGoal
+				x += 1
+				boxes += 1
+				goals += 1
+			case '.':
+				next_world.tiles[y * world.width + x] = Tile.Goal
+				x += 1
+				goals += 1
+			case ' ':
+				next_world.tiles[y * world.width + x] = Tile.Floor
+				x += 1
+		}
+	}
+
+	flood_fill(
+		initX - 1, initY - 1,
+		initX - 1, initX + puzzle.width + 1,
+		initY - 1, initY + puzzle.height + 2,
+		next_world,
+		Tile.Void2,
+		{Tile.Floor, Tile.Void})
+
+	flood_fill(
+		initX - 1, initY - 1,
+		initX - 1, initX + puzzle.width + 1,
+		initY - 1, initY + puzzle.height + 2,
+		next_world,
+		Tile.Void,
+		{Tile.Void2})
+
+
+	if (boxes != goals) {
+		puzzle.probably_unwinnable = true
+	}
+
+	return puzzle
+}
+
+flood_fill :: proc(x:i32, y:i32, minX:i32, maxX:i32, minY:i32, maxY:i32, world: ^World, set: Tile, inside: []Tile) {
+	// fmt.println("attempting flood fill")
+	if x < minX || x > maxX || y < minY || y > maxY do return
+	tile := world.tiles[y * world.width + x] 
+	// if tile == set do return
+
+	isInside : bool
+	for ins in inside {
+		if tile == ins do isInside = true
+	}
+	if !isInside do return
+
+	world.tiles[y * world.width + x] = set
+	// fmt.printfln("set:", x, y)
+
+	flood_fill(x, y + 1, minX, maxX, minY, maxY, world, set, inside)
+	flood_fill(x, y - 1, minX, maxX, minY, maxY, world, set, inside)
+	flood_fill(x - 1, y, minX, maxX, minY, maxY, world, set, inside)
+	flood_fill(x + 1, y, minX, maxX, minY, maxY, world, set, inside)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
