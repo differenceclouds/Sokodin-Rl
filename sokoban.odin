@@ -790,7 +790,7 @@ run_game :: proc() {
 		    rl.EndMode2D()
 
 		    if state == .YouWin {
-		    	message := YouWinMessage(len(record.moves))
+		    	message := fmt.ctprintf("Solved in %v moves! Try the next one?", len(record.moves))
 
 		    	x := window.width/2 - rl.MeasureText(message, 30)/2
 		    	rl.DrawText(message, x - 2, 94, 30, rl.BLACK)
@@ -811,13 +811,7 @@ run_game :: proc() {
 		    DrawGui(&window, &gui_data)
 
 		    if show_hud_message {
-		    	buf: [64]u8 = ---
-		    	ss : []string = {
-		    		"zoom: ",
-		    		strconv.itoa(buf[:], int(camera.zoom * 100) )
-		    	}
-		    	hud_message := to_cstring(strings.concatenate(ss[:], context.temp_allocator))
-		    	
+		    	hud_message := fmt.ctprintf("zoom: %v", int(camera.zoom * 100))		    	
 		    	rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
 		    }
@@ -828,14 +822,6 @@ run_game :: proc() {
 
 hi_score := false
 
-YW : []string = {"Solved in ",""," moves! Try the next one?"}
-YouWinMessage :: proc(moves: int) -> cstring {
-	buf: [64]u8 = ---
-	YW[1] = strconv.itoa(buf[:], moves )
-	m := strings.concatenate(YW[:])
-	defer delete(m)
-	return to_cstring(m)
-}
 UnsolvableMessage :: "this puzzle is unsolvable... press ] to skip"
 
 

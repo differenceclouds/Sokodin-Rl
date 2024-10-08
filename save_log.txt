@@ -30,3 +30,4 @@
 ;set: _03_Microban.txt ;index: 18 ;moves: urrDDDlddrUUUUruLLLdRurDDDlddrUUUUlllluR
 ;set: _05_Minicosmos.txt ;index: 2 ;moves: rruullluuRlddrrudrddllUdrruuurlrudrdduullruullDllddRRlluurrurrddrluulldllddrddrruUllluurrDullrrllrrdullddrddrruuLuuurrddrddLruuluulldd
 ;set: _05_Minicosmos.txt ;index: 0 ;moves: uuluuRlddrrurruullDDullddrRlddrruUlu
+;set: _05_Minicosmos.txt ;index: 0 ;moves: uuluuRlddrrurruullDDullddrRlddrruUlu
