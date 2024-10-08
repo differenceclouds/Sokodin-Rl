@@ -4,32 +4,49 @@ import "core:os"
 import "core:strings"
 import "core:fmt"
 import "core:strconv"
+import "core:path/filepath"
 
 
 
 
-ParsingState :: enum {
-	notes,
-	puzzleInit,
-	puzzleRead,
-}
 
 get_set_title :: proc(filename: string) -> string {
+	name := filepath.stem(filename)
 	start := 0
-	end := len(filename)
-	if strings.has_prefix(filename, "_") do start = 4
-	if strings.has_suffix(filename, ".txt") do end = len(filename) - 4
-	return filename[start:end] 
+	if strings.has_prefix(name, "_") do start = 4
+	return name[start:]
+}
+
+check_prefixes :: proc(line: string, prefixes: []string) -> bool {
+	for prefix in prefixes {
+		if strings.has_prefix(line, prefix) {
+			return true
+		}
+	}
+	return false
 }
 
 read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) -> []Puzzle {
+	puzzle_line_prefixes: []string = {
+	" ","-", "_", "#", "@", "$", "*","."
+	}
+
+	puzzle_title_prefixes: []string = {
+		`'`, `"`
+	}
+
+	ParsingState :: enum {
+		notes,
+		puzzleInit,
+		puzzleRead,
+	}
+
     text, ok := os.read_entire_file(filepath, allocator)
     if !ok {
         panic(strings.concatenate({"Unable to read ", filepath}, allocator))
     }
 
 	it := strings.concatenate({ string(text), "\n\n\n" }, allocator)
-
 
 	// set : Set = {}
 
@@ -39,11 +56,13 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 	lines: [dynamic]string = make([dynamic]string, allocator)
 	set_index: string
 
-	{
-		ss := strings.split(filepath, "/")		
-		set_title = get_set_title(ss[len(ss) - 1])
-		delete(ss)
-	}
+	// {
+	// 	ss := strings.split(filepath, "/")
+	// 	set_title = get_set_title(ss[len(ss) - 1])
+	// 	delete(ss)
+	// }
+	set_title = get_set_title(filepath)
+
 
 	state : ParsingState = .notes
 	
@@ -51,7 +70,7 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 
 	puzzle_index : int = 1
 
-	for line in strings.split_lines_after_iterator(&it) {
+	for line in strings.split_lines_iterator(&it) {
 		if check_prefixes(line, puzzle_title_prefixes) {
 			state = .puzzleInit
 		} else if check_prefixes(line, puzzle_line_prefixes) {
@@ -71,11 +90,13 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 				if check_prefixes(line, puzzle_title_prefixes) {
 					puzzle_title = strings.trim_right_space(line)
 				}
-				buf: [64]u8 = ---
-				set_index = strconv.itoa(buf[:], puzzle_index)
+				// buf: [64]u8 = ---
+				// set_index = strconv.itoa(buf[:], puzzle_index)
+				set_index = fmt.tprintf("%v", puzzle_index)
 
 			case .puzzleRead:
-				if line == "\n" {
+				if len(line) == 0 {
+					// fmt.println("ok")
 					puzzle := puzzle_from_prepuzzle(set_title, puzzle_title, set_index, lines[:])
 					append(&set, puzzle)
 					puzzle_index += 1
@@ -94,13 +115,7 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 
 
 
-puzzle_line_prefixes: []string = {
-	" ","-", "_", "#", "@", "$", "*","."
-}
 
-puzzle_title_prefixes: []string = {
-	`'`, `"`
-}
 
 puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, set_index: string, lines: []string, ) -> Puzzle {
 	combine: string = strings.join(lines[:], "\n")
@@ -118,14 +133,7 @@ puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, set_index
 	return puzzle
 }
 
-check_prefixes :: proc(line: string, prefixes: []string) -> bool {
-	for prefix in prefixes {
-		if strings.has_prefix(line, prefix) {
-			return true
-		}
-	}
-	return false
-}
+
 
 
 

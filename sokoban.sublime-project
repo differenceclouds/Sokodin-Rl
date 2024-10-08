@@ -8,7 +8,7 @@
 			"path": "~/Odin/core",
 		},
 		{
-			"path": "~/Odin/vendor",
+			"path": "~/Odin/vendor/raylib",
 		},
 	],
 	"build_systems":
@@ -16,7 +16,12 @@
 		{
 			"name": "sublime_odin_template",
 			"shell_cmd": "~/Odin/odin run .",
-
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$"
+		},
+		{
+			"name": "sublime_odin_template_win",
+			"cmd": "odin run .",
+			"file_regex": "^(.+)\\(([0-9]+):([0-9]+)\\) (.+)$"
 		}
 	],
 	"settings":
@@ -30,21 +35,9 @@
 			},
 		},
 	},
-	"debugger_configurations":
-	[
-		{
-			"type": "lldb",
-			"request": "attach",
-			"name": "Attach",
-			"program": "${folder}/sokoban"
-		},
-		{
-			"type": "lldb",
-			"request": "launch",
-			"name": "Launch",
-			"program": "${folder}/sokoban",
-			"args": [],
-			"cwd": "${folder}"
-		},
-	],
 }
+
+
+
+
+

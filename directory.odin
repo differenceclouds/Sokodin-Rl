@@ -28,6 +28,13 @@ print_file_info :: proc(fi: os.File_Info) {
     }
 }
 
+SelectPuzzleSet :: proc( directory: string, filename: string) -> []Puzzle {
+    // path := strings.concatenate({directory, filename}, context.temp_allocator)
+    // path := path.
+    path := filepath.join({directory, filename}, context.temp_allocator)
+    return read_puzzle_file(path)
+}
+
 GetSetOfSets :: proc(directory: string) -> []string {
     file_list := read_directory(directory)
     defer os.file_info_slice_delete(file_list)
