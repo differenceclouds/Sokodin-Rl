@@ -46,7 +46,12 @@ SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
 		" ;moves: ", string(chars)
 	})
 
-	f, err := os.open(Save_Location, os.O_CREATE | os.O_APPEND | os.O_WRONLY, /*os.S_IRWXU*/)
+	when ODIN_OS == .Windows {
+		f, err := os.open(Save_Location, os.O_CREATE | os.O_APPEND | os.O_WRONLY)
+	} else {
+		f, err := os.open(Save_Location, os.O_CREATE | os.O_APPEND | os.O_WRONLY, os.S_IRWXU)
+	}
+
 	defer os.close(f)
 	if err != os.ERROR_NONE {
 		fmt.eprintln("Could not read save file", err)

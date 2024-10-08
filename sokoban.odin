@@ -351,8 +351,12 @@ run_game :: proc() {
 // main :: proc() {
 
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
-
-	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}, false}
+	when ODIN_OS == .Darwin {
+		control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE}
+	} else {
+		control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}
+	}
+	window := Window{"Welcome to the Sokoban", 960, 720, 60, control_flags, false}
 	rl.SetConfigFlags( window.control_flags )
 	rl.InitWindow(window.width, window.height, window.title)
 	rl.SetTargetFPS(window.fps)
