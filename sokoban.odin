@@ -125,9 +125,6 @@ User_Input :: struct {
 
 draw_world_tiles :: #force_inline proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
 	x, y : i32
-
-	
-
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
 			
@@ -352,17 +349,18 @@ SetCamera :: proc(camera: ^rl.Camera2D, window: Window, world: World, tilemap: T
 // run_game :: proc(tracking_allocator : mem.Tracking_Allocator) {
 run_game :: proc() {
 // main :: proc() {
-	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE }, false}
 
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
+
+	window := Window{"Welcome to the Sokoban", 960, 720, 60, rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}, false}
+	rl.SetConfigFlags( window.control_flags )
 	rl.InitWindow(window.width, window.height, window.title)
-	// rl.ToggleBorderlessWindowed()
-	// rl.SetWindowSize(960,720)
-	// rl.SetWindowPosition(100, 100)
-	rl.SetWindowState( window.control_flags )
 	rl.SetTargetFPS(window.fps)
 	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
 	rl.InitAudioDevice()
+
+	fmt.printfln("window scale: %v", rl.GetWindowScaleDPI())
+
 
 	Sounds : []rl.Sound = {
 		rl.LoadSound("./sounds/chip/bummer.wav"),
@@ -414,13 +412,7 @@ run_game :: proc() {
 		}
 	}
 
-
 	puzzle_set := SelectPuzzleSet("levels", set_of_sets[set_index])
-	// fmt.println(puzzle_set)
-
-	for pz in puzzle_set {
-		fmt.println(pz.title_bar)
-	}
 
 	puzzle := set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 	defer delete(puzzle_set)
