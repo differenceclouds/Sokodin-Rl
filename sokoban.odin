@@ -10,7 +10,6 @@ import rl "vendor:raylib"
 //memory debug imports
 import "core:log"
 import "core:mem"
-import "core:c/libc"
 
 
 
@@ -330,10 +329,7 @@ reverse_move :: proc(move: Move_Type, _player: Player, world: ^World) -> (new_pl
 
 
 
-SelectPuzzleSet :: proc( directory: string, filename: string) -> []Puzzle {
-	path := strings.concatenate({directory, filename}, context.temp_allocator)
-	return read_puzzle_file(path)
-}
+
 
 UpdateWindowTitle :: proc(title:cstring, window: ^Window) {
 	window.title = title
@@ -399,7 +395,7 @@ run_game :: proc() {
 
 
 
-	set_of_sets := GetSetOfSets("./levels/")
+	set_of_sets := GetSetOfSets("levels")
 	defer delete(set_of_sets)
 
 	set_index :int
@@ -419,9 +415,16 @@ run_game :: proc() {
 	}
 
 
-	puzzle_set := SelectPuzzleSet("./levels/", set_of_sets[set_index])
+	puzzle_set := SelectPuzzleSet("levels", set_of_sets[set_index])
+	// fmt.println(puzzle_set)
+
+	for pz in puzzle_set {
+		fmt.println(pz.title_bar)
+	}
+
 	puzzle := set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 	defer delete(puzzle_set)
+
 
 	world, next_world = next_world, world
 	UpdateWindowTitle(puzzle.title_bar, &window)
@@ -788,6 +791,7 @@ run_game :: proc() {
 
 		    if state == .YouWin {
 		    	message := YouWinMessage(len(record.moves))
+
 		    	x := window.width/2 - rl.MeasureText(message, 30)/2
 		    	rl.DrawText(message, x - 2, 94, 30, rl.BLACK)
 		    	rl.DrawText(message, x, 96, 30, rl.RAYWHITE)
@@ -812,7 +816,8 @@ run_game :: proc() {
 		    		"zoom: ",
 		    		strconv.itoa(buf[:], int(camera.zoom * 100) )
 		    	}
-		    	hud_message := to_cstring(strings.concatenate(ss[:]))
+		    	hud_message := to_cstring(strings.concatenate(ss[:], context.temp_allocator))
+		    	
 		    	rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
 		    }
