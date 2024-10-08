@@ -1,6 +1,5 @@
 package sokoban
 
-
 import "core:fmt"
 import "core:strings"
 import "core:strconv"
@@ -351,14 +350,12 @@ run_game :: proc() {
 // main :: proc() {
 
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
-	when ODIN_OS == .Darwin {
-		control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE}
-	} else {
-		control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}
-	}
+
+	control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}
 	window := Window{"Welcome to the Sokoban", 960, 720, 60, control_flags, false}
 	rl.SetConfigFlags( window.control_flags )
 	rl.InitWindow(window.width, window.height, window.title)
+	rl.SetTextureFilter(rl.GetFontDefault().texture, .POINT)
 	rl.SetTargetFPS(window.fps)
 	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
 	rl.InitAudioDevice()

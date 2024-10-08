@@ -35,3 +35,5 @@
 ;set: _05_Minicosmos.txt ;index: 0 ;moves: uuluuRlddrrurruullDDullddrRlddrruUlu
 ;set: _03_Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU
 ;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
