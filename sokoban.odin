@@ -126,10 +126,7 @@ draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) 
 	tileW := world.tiles[index - 1] == .Wall
 	tileNW := world.tiles[index - world.width - 1] == .Wall
 
-
-
 	quad1, quad2, quad3, quad4: int
-
 
 	if tileN && tileNW && tileW {
 		quad1 = 2
@@ -202,8 +199,6 @@ draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) 
 			}
 		}
 	}
-
-
 
 	source_rects : [4]rl.Rectangle = {
 		RectFromCoord(Blob_Quads[quad1], tilemap),

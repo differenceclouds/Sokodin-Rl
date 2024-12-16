@@ -49,11 +49,10 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 	it := strings.concatenate({ string(text), "\n\n\n" }, allocator)
 
 	set : [dynamic]Puzzle = {}
-	set_title : string
 	puzzle_title: string
 	lines: [dynamic]string = make([dynamic]string, allocator)
 	set_index: string
-	set_title = get_set_title(filepath)
+	set_title := get_set_title(filepath)
 	puzzle_index : int = 1
 
 	state : ParsingState = .notes
@@ -75,10 +74,10 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 					state = .puzzleInit
 				}
 			case .puzzleInit:
+				set_index = fmt.tprintf("%v", puzzle_index)
 				if check_prefixes(line, puzzle_title_prefixes) {
 					puzzle_title = strings.trim_right_space(line)
 				}
-				set_index = fmt.tprintf("%v", puzzle_index)
 
 			case .puzzleRead:
 				if len(line) == 0 {
@@ -87,6 +86,7 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 					puzzle_index += 1
 					clear_dynamic_array(&lines)
 					state = .puzzleInit
+					puzzle_title = ""
 				} else {
 					trim := strings.trim_right_space(line)
 					append(&lines, trim)
