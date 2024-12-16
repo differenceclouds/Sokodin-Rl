@@ -121,17 +121,15 @@ draw_world_tiles :: proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle
 	x, y : i32
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
-			
 			index := y * world.width + x
 			tileType := world.tiles[index]
-
-			source_rect: rl.Rectangle
 			if tileType == .Wall && tilemap.options.drawBlobWalls {
 				draw_blob_wall(world, tilemap, index, x, y)
 				continue
-			} else {
-				source_rect = rects[tileType]
-			}
+			} 
+
+			source_rect := rects[tileType]
+			if source_rect == {} do continue
 
 			rotation:f32 = 0
 			
@@ -165,37 +163,14 @@ draw_world_tiles :: proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle
 					if player.direction == .left do source_rect.width *= -1
 					else if player.direction == .down do source_rect.height *= -1
 				}
-				// source_rect.x += f32((rand.float32() - 0.5) * 100) * source_rect.width
-				// source_rect.y += f32((rand.float32() - 0.5) * 100) * source_rect.width
 			}
-
-
-
 			dest_rect := rl.Rectangle {
 				f32(x) * tilemap.w,
 				f32(y) * tilemap.h,
 				tilemap.w,
 				tilemap.h,
 			}
-
-			color := rl.WHITE
-			if source_rect == {} do color = rl.BLANK
-
-			// if !tilemap.options.singleLayer {
-			// 	b_source: rl.Rectangle
-			// 	switch tileType {
-			// 		case .Void:
-			// 		case .Wall, .Box, .Player:
-			// 			b_source 
-			// 		case .PlayerOnGoal:
-			// 		case .BoxOnGoal:
-			// 		case .Goal:
-			// 		case .Floor:
-			// 		case .Void2:
-			// 	}
-			// }
-
-			rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, color)				
+			rl.DrawTexturePro(tilemap.texture, source_rect, dest_rect, {tilemap.w/2,tilemap.h/2}, rotation, rl.WHITE)				
 		}
 	}
 }
@@ -804,7 +779,6 @@ run_game :: proc() {
 		    	rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
 		    }
-			
 		rl.EndDrawing()
 	}
 }
