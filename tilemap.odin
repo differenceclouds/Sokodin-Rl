@@ -122,6 +122,10 @@ WallTilesBlob :: enum {
 
 Blob_Set :: bit_set[WallTilesBlob]
 
+Blob_Quads : [5]rl.Vector2 = {
+	{0, 2}, {1, 2}, {2, 2},
+	{0, 3}, {1, 3}
+}
 
 YASCTiles :: []rl.Vector2 {
 	{3,2}, //void
@@ -164,7 +168,7 @@ YASCOptions : TileRendererOptions = {
 	playerTileStyle = .EightTileDirectional,
 	defaultZoom = 0,
 	defaultPlayerOnRest = true,
-	drawBlobWalls = false,
+	drawBlobWalls = true,
 	singleLayer = false,
 }
 

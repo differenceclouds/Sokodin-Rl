@@ -37,3 +37,11 @@
 ;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
 ;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
 ;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDuulldd
+;set: _03_Microban.txt ;index: 2 ;moves: ruuLLLulDrrrrddlUruLLLddllluurRllrrurldllddrluurrDrdLuuurD
+;set: _03_Microban.txt ;index: 3 ;moves: dlllluurrrDulllrrrrdddlruulullDurrdLLrrrddlUruLLulllddrRRurrddlUru
+;set: _03_Microban.txt ;index: 4 ;moves: LulDrduuurrdLrrddlUlldRdlllu
+;set: _03_Microban.txt ;index: 4 ;moves: LuurrdLulrdrrddlUrllldRuuulldDrddllu

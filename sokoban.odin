@@ -10,15 +10,13 @@ import rl "vendor:raylib"
 import "core:log"
 import "core:mem"
 
-
-
 DEBUG_MEM :: true
 
 Window :: struct { 
-	title:          cstring,
-	width:         i32, 
-	height:        i32,
-	fps:           i32,
+	title: cstring,
+	width: i32, 
+	height: i32,
+	fps: i32,
 	control_flags: rl.ConfigFlags,
 	resize_flag: bool,
 }
@@ -27,7 +25,6 @@ World :: struct {
 	width:   i32,
 	height:  i32,
 	tiles:   []Tile,
-
 }
 
 Puzzle :: struct {
@@ -119,10 +116,132 @@ User_Input :: struct {
 }
 
 
+draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) {
+	tileN := world.tiles[index - world.width] == .Wall
+	tileNE := world.tiles[index - world.width + 1] == .Wall
+	tileE := world.tiles[index + 1] == .Wall
+	tileSE := world.tiles[index + world.width + 1] == .Wall
+	tileS := world.tiles[index + world.width] == .Wall
+	tileSW := world.tiles[index + world.width - 1] == .Wall
+	tileW := world.tiles[index - 1] == .Wall
+	tileNW := world.tiles[index - world.width - 1] == .Wall
 
 
 
-draw_world_tiles :: #force_inline proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
+	quad1, quad2, quad3, quad4: int
+
+
+	if tileN && tileNW && tileW {
+		quad1 = 2
+	} else {
+		if tileN {
+			if tileW {
+				quad1 = 0
+			} else {
+				quad1 = 3
+			}
+		} else {
+			if tileW {
+				quad1 = 1
+			} else {
+				quad1 = 4
+			}
+		}
+	}
+
+	if tileN && tileNE && tileE {
+		quad2 = 2
+	} else {
+		if tileN {
+			if tileE {
+				quad2 = 0
+			} else {
+				quad2 = 3
+			}
+		} else {
+			if tileE {
+				quad2 = 1
+			} else {
+				quad2 = 4
+			}
+		}
+	}
+
+	if tileS && tileSE && tileE {
+		quad3 = 2
+	} else {
+		if tileS {
+			if tileE {
+				quad3 = 0
+			} else {
+				quad3 = 3
+			}
+		} else {
+			if tileE {
+				quad3 = 1
+			} else {
+				quad3 = 4
+			}
+		}
+	}
+
+	if tileS && tileSW && tileW {
+		quad4 = 2
+	} else {
+		if tileS {
+			if tileW {
+				quad4 = 0
+			} else {
+				quad4 = 3
+			}
+		} else {
+			if tileW {
+				quad4 = 1
+			} else {
+				quad4 = 4
+			}
+		}
+	}
+
+
+
+	source_rects : [4]rl.Rectangle = {
+		RectFromCoord(Blob_Quads[quad1], tilemap),
+		RectFromCoord(Blob_Quads[quad2], tilemap),
+		RectFromCoord(Blob_Quads[quad3], tilemap),
+		RectFromCoord(Blob_Quads[quad4], tilemap)
+	}
+
+	for &r in source_rects {
+		r.width /= 2
+		r.height /= 2
+	}
+	w := source_rects[1].width
+	h := source_rects[1].height
+	source_rects[1].x += w
+	source_rects[2].x += w
+	source_rects[2].y += h
+	source_rects[3].y += h
+
+
+	offsets : [4]rl.Vector2 = {
+		{0,0}, {w, 0}, {w,h}, {0, h}
+	}
+
+	for r, i in source_rects {
+		dest_rect := rl.Rectangle {
+			f32(x) * tilemap.w + offsets[i].x,
+			f32(y) * tilemap.h + offsets[i].y,
+			tilemap.w/2,
+			tilemap.h/2,
+		}
+		rl.DrawTexturePro(tilemap.texture, r, dest_rect, {tilemap.w/2,tilemap.h/2}, 0, rl.WHITE)
+
+	}
+}
+
+
+draw_world_tiles :: proc(world: World, tilemap: Tilemap, rects: [64]rl.Rectangle, player: Player, processPlayer: bool) {
 	x, y : i32
 	for y = 0; y < world.height; y += 1 {
 		for x = 0; x < world.width; x += 1 {
@@ -132,7 +251,8 @@ draw_world_tiles :: #force_inline proc(world: World, tilemap: Tilemap, rects: [6
 
 			source_rect: rl.Rectangle
 			if tileType == .Wall && tilemap.options.drawBlobWalls {
-
+				draw_blob_wall(world, tilemap, index, x, y)
+				continue
 			} else {
 				source_rect = rects[tileType]
 			}
@@ -236,7 +356,7 @@ check_for_win :: proc(world: World) -> bool {
 }
 
 
-process_user_input :: proc(user_input: ^User_Input, window: Window, world: World) {
+process_user_input :: proc(user_input: ^User_Input) {
 	user_input^ = User_Input {
 		up			= rl.IsKeyPressed(.UP),
 		down		= rl.IsKeyPressed(.DOWN),
@@ -457,7 +577,7 @@ run_game :: proc() {
 		}
 
 
-		process_user_input(&user_input, window, world)
+		process_user_input(&user_input)
 
 		
 		if player.state != .resting {
