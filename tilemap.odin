@@ -29,6 +29,7 @@ Tile :: enum {
 	Goal,
 	Floor,
 	Void2,
+	Credit
 }
 
 TileRenderer :: struct {
@@ -65,67 +66,6 @@ PlayerTileStyle :: enum {
 }
 
 
-//optional Wall tiles that follow the "blob" wang tile set
-//UpperCase is edges, lowercase is corners
-//bitwise
-// https://web.archive.org/web/20230528015915/http://www.cr31.co.uk/stagecast/wang/blob.html
-// WallTilesBlob :: enum {
-// 	Isolated = 0,
-
-//  Fill = 255,
-//  Cross = 85,
-
-// 	N = 1,
-// 	ne = 2,
-// 	E = 4,
-// 	se = 8,
-// 	S = 16,
-// 	sw = 32,
-// 	W = 64,
-// 	nw = 128,
-
-// 	// N = 1,
-// 	// E = 4,
-// 	// S =t 16,
-// 	// W = 64,
-
-// 	// NE = 5,
-// 	// SE = 20,
-// 	// SW = 80,
-// 	// NW = 65,
-
-// 	// NEne = 7,
-// 	// SEse = 28,
-// 	// SWsw = 112,
-// 	// NWnw = 193,
-
-// 	// NS = 17,
-// 	// EW = 68,
-
-// 	// NES = 21,
-// 	// ESW = 84,
-// 	// NSW = 81,
-// 	// NEW = 69,
-// }
-
-
-WallTilesBlob :: enum {
-	N,
-	ne,
-	E,
-	se,
-	S,
-	sw,
-	W,
-	nw,
-}
-
-Blob_Set :: bit_set[WallTilesBlob]
-
-Blob_Quads : [5]rl.Vector2 = {
-	{0, 2}, {1, 2}, {2, 2},
-	{0, 3}, {1, 3}
-}
 
 YASCTiles :: []rl.Vector2 {
 	{3,2}, //void
