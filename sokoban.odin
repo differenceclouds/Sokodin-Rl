@@ -316,6 +316,7 @@ SetCamera :: proc(camera: ^rl.Camera2D, window: Window, world: World, tilemap: T
 run_game :: proc() {
 // main :: proc() {
 
+	fmt.println("default directory: ",rl.GetWorkingDirectory())
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
 
 	control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}
@@ -324,7 +325,8 @@ run_game :: proc() {
 	rl.InitWindow(window.width, window.height, window.title)
 	rl.SetTextureFilter(rl.GetFontDefault().texture, .POINT)
 	rl.SetTargetFPS(window.fps)
-	rl.GuiLoadStyle("./style_sunny.old.rgs")
+	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
+	rl.GuiLoadIcons("./rgui/iconset.rgi", false)
 	rl.InitAudioDevice()
 
 	fmt.printfln("window scale: %v", rl.GetWindowScaleDPI())
@@ -335,14 +337,17 @@ run_game :: proc() {
 		rl.LoadSound("./sounds/chip/exit.wav"),
 		rl.LoadSound("./sounds/chip/push.wav"),
 		rl.LoadSound("./sounds/chip/socket.wav"),
-		rl.LoadSound("./sounds/stone1.wav")
+		rl.LoadSound("./sounds/stone1.wav"),
+		rl.LoadSound("./sounds/stone1_r.wav"),
+		rl.LoadSound("./sounds/oof.wav")
+
 	}
 
 	game := Game {
 		pause     = true,
 		width     = 64,
 		height    = 64,
-		state = .Gameplay
+		state = .Gameplay,
 	}
 
 	world		:= World{game.width, game.height, make([]Tile, game.width * game.height)}
@@ -365,7 +370,9 @@ run_game :: proc() {
 	defer delete(set_of_sets)
 
 	set_index :int
-	set_index, game.puzzle_index = SimpleLoad(set_of_sets)
+	tilemap_index := 0
+
+	set_index, game.puzzle_index, tilemap_index = SimpleLoad(set_of_sets)
 	if set_index == -1  {
 		game.puzzle_index = 0
 		set_index = 0
@@ -398,7 +405,6 @@ run_game :: proc() {
 
 	defer delete(tilemap_list)
 
-	tilemap_index := 0
 	tilemap := tilemap_list[tilemap_index]
 	tilerenderer := SetTileRenderer(tilemap)
 
@@ -449,6 +455,11 @@ run_game :: proc() {
 		possible_move : Move_Type
 
 		undo: bool
+		tryMoved := false
+		moved := false
+		movedBox := false
+		movedBoxOntoGoal := false
+		justWon := false
 
 		if (state == GameState.Gameplay) {
 
@@ -458,6 +469,7 @@ run_game :: proc() {
 				player.direction = .left
 				front.direction = .left
 				possible_move = Move_Type.left
+				tryMoved = true
 			}
 			else if user_input.right {
 				front.x += 1
@@ -465,6 +477,7 @@ run_game :: proc() {
 				player.direction = .right
 				front.direction = .right
 				possible_move = Move_Type.right
+				tryMoved = true
 			}
 			else if user_input.up {
 				front.y -= 1
@@ -472,6 +485,7 @@ run_game :: proc() {
 				player.direction = .up
 				front.direction = .up
 				possible_move = Move_Type.up
+				tryMoved = true
 			}
 			else if user_input.down {
 				front.y += 1
@@ -479,8 +493,10 @@ run_game :: proc() {
 				player.direction = .down
 				front.direction = .down
 				possible_move = Move_Type.down
+				tryMoved = true
 			}
-			else if user_input.undo {
+			else if user_input.undo || gui_data.undo {
+				gui_data.undo = false
 				m, ok := pop_safe(&record.moves)
 				if ok {
 					undo = true
@@ -488,6 +504,7 @@ run_game :: proc() {
 					if success {
 						player = new_player
 						game.moveCount -= 1
+						if !gui_data.mute do rl.PlaySound(Sounds[5])
 					} else {
 						fmt.printf("Invalid Undo")
 					}
@@ -495,7 +512,8 @@ run_game :: proc() {
 			}
 
 
-			if user_input.zoom_in {
+			if user_input.zoom_in || gui_data.zoom_in {
+				gui_data.zoom_in = false
 				if camera.zoom < 1 {
 					camera.zoom = clamp(camera.zoom + 0.25, 0.5, 10)
 				} else {
@@ -504,7 +522,8 @@ run_game :: proc() {
 				hud_timer = 0
 				show_hud_message = true
 			}
-			else if user_input.zoom_out {
+			else if user_input.zoom_out || gui_data.zoom_out {
+				gui_data.zoom_out = false
 				if camera.zoom <= 1 {
 					camera.zoom = clamp(camera.zoom - 0.25, 0.25, 10)
 				} else {
@@ -517,11 +536,7 @@ run_game :: proc() {
 
 
 
-		//single frame states
-		moved := false
-		movedBox := false
-		movedBoxOntoGoal := false
-		justWon := false
+
 
 		if (player != front && !undo) {
 			prevTile := world.tiles[player.y    * world.width + player.x]
@@ -582,7 +597,7 @@ run_game :: proc() {
 							justWon = true
 							state = .YouWin
 							// hi_score = DoWin(record, puzzle_index, &game.save)
-							SimpleSave(record, puzzle_index, set_of_sets[set_index])	
+							SimpleSave(record, puzzle_index, set_of_sets[set_index], tilemap_index)	
 						}
 				}
 				if moveCount % 2 == 0 {
@@ -608,32 +623,44 @@ run_game :: proc() {
 			}
 		}
 
-		if movedBoxOntoGoal {
-			rl.PlaySound(Sounds[3])
-		} else if movedBox {
-			rl.PlaySound(Sounds[2])
-		}
-		else if moved {
-			rl.PlaySound(Sounds[4])
+
+		if !gui_data.mute{
+			if movedBoxOntoGoal {
+				rl.PlaySound(Sounds[3])
+			} else if movedBox {
+				rl.PlaySound(Sounds[2])
+			} else if moved {
+				rl.PlaySound(Sounds[4])
+			} else if tryMoved {
+				rl.PlaySound(Sounds[6])
+			}
+
+			if justWon {
+				rl.PlaySound(Sounds[1])
+			} else if user_input.reset || gui_data.reset {
+				rl.PlaySound(Sounds[0])
+			}
 		}
 
-		if justWon {
-			rl.PlaySound(Sounds[1])
-		} else if user_input.reset {
-			rl.PlaySound(Sounds[0])
-		}
+
+		// if user_input.undo || gui_data.undo {
+		// 	rl.PlaySound(Sounds[5])
+		// }
 
 
 		randomize : bool
 
 		next_index := game.puzzle_index
-		if user_input.next_level || (user_input.advance && state == .YouWin) {
+		if user_input.next_level || (user_input.advance && state == .YouWin) || gui_data.puzzle_inc {
+			gui_data.puzzle_inc = false
 			next_index = (next_index + 1) %% len(puzzle_set)
 		}
-		if user_input.prev_level {
+		if user_input.prev_level || gui_data.puzzle_dec{
+			gui_data.puzzle_dec = false
 			next_index = (next_index - 1) %% len(puzzle_set)
 		}
-		if (next_index != game.puzzle_index || user_input.reset) {
+		if (next_index != game.puzzle_index || user_input.reset || gui_data.reset) {
+			gui_data.reset = false
 			game.puzzle_index = next_index
 			if gui_data.randomize {
 				randomize = true				
@@ -650,7 +677,7 @@ run_game :: proc() {
 				set_index = int(gui_data.set_result)
 
 				game.puzzle_index = 0
-				_, p := SimpleLoad(set_of_sets, set_of_sets[set_index])
+				_, p, _ := SimpleLoad(set_of_sets, set_of_sets[set_index])
 				if p != -1 {
 					game.puzzle_index = p + 1
 				}
@@ -768,12 +795,12 @@ run_game :: proc() {
 				rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
 			}
 
-			DrawGui(&window, &gui_data, tilemap)
+			DrawGui(window, &gui_data, tilemap)
 
 			if show_hud_message {
 				hud_message := fmt.ctprintf("zoom: %v", int(camera.zoom * 100))		    	
-				rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
-				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
+				rl.DrawText(hud_message, window.width - 157, window.height - 36, 30,  rl.BLACK)
+				rl.DrawText(hud_message, window.width - 155, window.height - 34, 30,  rl.WHITE)
 			}
 		rl.EndDrawing()
 	}

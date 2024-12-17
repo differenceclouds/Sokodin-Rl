@@ -29,12 +29,13 @@ Record :: struct {
 RecordData :: struct {
 	set_title: string,
 	puzzle_index: int,
-	chars: []u8
+	chars: []u8,
+	tilemap_index: int
 }
 
 Save_Location :: "./save_log.txt"
 
-SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
+SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string, tilemap_index: int) {
 	buf: [64]u8 = ---
 
 	chars := MakeMoveChars(record.moves[:])
@@ -42,8 +43,9 @@ SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
 	log_entry := strings.concatenate({
 		"\r\n",
 		";set: ", set_title,
-		" ;index: ", strconv.itoa(buf[:], puzzle_index),
-		" ;moves: ", string(chars)
+		" ;index: ", fmt.tprint(puzzle_index),
+		" ;moves: ", string(chars),
+		" ;tilemap: ", fmt.tprint(tilemap_index)
 	})
 
 	when ODIN_OS == .Windows {
@@ -63,12 +65,12 @@ SimpleSave :: proc(record: Record, puzzle_index: int, set_title: string) {
 
 }
 
-SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_index: int, puzzle_index: int) {
-	s, p := -1, -1
+SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_index: int, puzzle_index: int, tilemap_index: int) {
+	s, p, t := -1, -1, 0
 
 	data, ok := os.read_entire_file(Save_Location)
 	if !ok {
-		return s, p
+		return s, p, t
 	}
 	defer delete(data)
 
@@ -82,7 +84,7 @@ SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_inde
 	}
 
 	if last_line == "" {
-		return -1, -1
+		return -1, -1, 0
 	}
 
 	for prop in strings.split(last_line, ";", context.temp_allocator) {
@@ -95,18 +97,26 @@ SimpleLoad :: proc(set_of_sets: []string, set_select : string = "") -> (set_inde
 				}
 			}
 		}
+		if strings.has_prefix(prop, "tilemap:") {
+			_tilemap := strings.trim_space(strings.trim_prefix(prop, "tilemap:"))
+			if _t, ok3 := strconv.parse_int(_tilemap); ok3 {
+				t = _t
+			} else {
+				fmt.println("bad tile index in save_log.txt")
+			}
+		}
 		if strings.has_prefix(prop, "index:") {
 			_title := strings.trim_space(strings.trim_prefix(prop, "index:"))
 			ok2 := false
 			p, ok2 = strconv.parse_int(_title)
 			if !ok2 {
 				fmt.printfln("bad level index in save_log.txt")
-				return -1, -1
+				return -1, -1, t
 			}
 		}
 	}
 
-	return s, p
+	return s, p, t
 }
 
 

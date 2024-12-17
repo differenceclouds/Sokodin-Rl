@@ -3,18 +3,18 @@ import rl "vendor:raylib"
 
 
 
-GetBlobIndex :: proc(cardinal1, corner, cardinal2: bool) -> int {
-	if cardinal1 && corner && cardinal2 {
+GetBlobIndex :: proc(cardinalV, corner, cardinalH: bool) -> int {
+	if cardinalV && corner && cardinalH {
 		return 2
 	} else {
-		if cardinal1 {
-			if cardinal2 {
+		if cardinalV {
+			if cardinalH {
 				return 0
 			} else {
 				return 3
 			}
 		} else {
-			if cardinal2 {
+			if cardinalH {
 				return 1
 			} else {
 				return 4
@@ -24,11 +24,7 @@ GetBlobIndex :: proc(cardinal1, corner, cardinal2: bool) -> int {
 }
 
 draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) {
-	YASC_Blob_Quads : [5]rl.Vector2 = {
-		{0, 2}, {1, 2}, {2, 2},
-		{0, 3}, {1, 3}
-	}
-	YASC_Quad_Offsets : [4]rl.Vector2 = {
+	Quad_Offsets : [4]rl.Vector2 = {
 		{0,0}, {1, 0}, {1,1}, {0, 1}
 	}
 	tileN := world.tiles[index - world.width] == .Wall
@@ -49,14 +45,14 @@ draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) 
 
 	source_rects : [4]rl.Rectangle
 	for &r, i in source_rects {
-		r = RectFromCoord(YASC_Blob_Quads[blob_indexes[i]], tilemap)
+		r = RectFromCoord(tilemap.blobCoords[blob_indexes[i]], tilemap)
 		r.width /= 2
 		r.height /= 2
-		r.x += YASC_Quad_Offsets[i].x * r.width
-		r.y += YASC_Quad_Offsets[i].y * r.height
+		r.x += Quad_Offsets[i].x * r.width
+		r.y += Quad_Offsets[i].y * r.height
 		dest_rect := rl.Rectangle {
-			f32(x) * tilemap.w + YASC_Quad_Offsets[i].x * r.width,
-			f32(y) * tilemap.h + YASC_Quad_Offsets[i].y * r.height,
+			f32(x) * tilemap.w + Quad_Offsets[i].x * r.width,
+			f32(y) * tilemap.h + Quad_Offsets[i].y * r.height,
 			tilemap.w/2,
 			tilemap.h/2,
 		}

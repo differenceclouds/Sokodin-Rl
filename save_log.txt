@@ -52,3 +52,9 @@
 ;set: _03_Microban.txt ;index: 2 ;moves: ruuLLLulDrrrrddlUruLLLLrlrddllluuRlrRurDlllrrllddrrrUdllluurrDrdLuuurD
 ;set: _03_Microban.txt ;index: 3 ;moves: dllllluudrdrrlluurrrrddllrruulDulDLrrrddlUruLLulllddrrRurrddlUru
 ;set: _03_Microban.txt ;index: 4 ;moves: LulDrddlluRuuurrrdLrrddlUddllURlruLruulldDrddllu
+;set: _03_Microban.txt ;index: 0 ;moves: dlUrrrdLullddrUluRuulDrddrruLdlU ;tilemap: 0
+;set: _03_Microban.txt ;index: 1 ;moves: rddLruulDrddllluu ;tilemap: 4
+;set: _03_Microban.txt ;index: 2 ;moves: ruuLLLulDrddlUdlluurRurDrrrddlUruLLLulDllddrrrUdllluurrDrdLuuurD ;tilemap: 30
+;set: _03_Microban.txt ;index: 4 ;moves: LulDrdduuuurrdLrrddlUlldRdlllu ;tilemap: 67
+;set: _03_Microban.txt ;index: 5 ;moves: dllllludululllddRluurDRRRRRdrrruullDurrddlLLLulllllddrUluRRRRRRdrrruullDurrddlLLulllllddrlrUluRRRRRdrrruullDurrddl ;tilemap: 95
+;set: _03_Microban.txt ;index: 6 ;moves: rludlluurluuurrrdLrrddlUluullddRdlddrrrruulLddrUdlllu ;tilemap: 95

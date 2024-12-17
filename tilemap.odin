@@ -14,6 +14,7 @@ Tilemap :: struct {
 	gutter: f32,
 	tileCoords: []rl.Vector2,
 	wallCoords: []rl.Vector2,
+	blobCoords: [5]rl.Vector2,
 	options: TileRendererOptions
 }
 
@@ -65,7 +66,10 @@ PlayerTileStyle :: enum {
 	FourDirectionWithPoses, //all four directions, each with poses
 }
 
-
+YASC_Blob_Quads : [5]rl.Vector2 = {
+	{0, 2}, {1, 2}, {2, 2},
+	{0, 3}, {1, 3}
+}
 
 YASCTiles :: []rl.Vector2 {
 	{3,2}, //void
@@ -206,6 +210,7 @@ InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 			0,
 			YASCTiles, 
 			YASCWallTiles,
+			YASC_Blob_Quads,
 			YASCOptions,
 		})
 	}
@@ -213,14 +218,16 @@ InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 }
 
 
+
+
 LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 	shoveIt := Tilemap {
-		"Shove It! The Warehouse Game - 1990",
-		rl.LoadTexture("./sheets/ShoveIt.png"),
-		24, 24,
-		{4, 4},
-		4,
-		{
+		name = "Shove It! - 1990",
+		texture = rl.LoadTexture("./sheets/ShoveIt.png"),
+		w = 24, h = 24,
+		offset = {4, 4},
+		gutter = 4,
+		tileCoords = {
 			{5,3}, //void
 			{6,2}, //wall
 			{0,0}, //player
@@ -236,8 +243,8 @@ LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 			{2,0}, //player walking odd frame
 			{3,0}, //player pushing even frame
 			{5,0}, //player pushing odd frame
-		}, {},
-		{
+		}, 
+		options = {
 			disableVoidTile = false,
 			floorTileAsVoid = false,
 			renderBackgroundImage = false,
@@ -248,12 +255,10 @@ LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 	}
 
 	Wren := Tilemap {
-		"wren",
-		rl.LoadTexture("./sheets/wren3.png"),
-		32, 32,
-		{0,0},
-		0,
-		{
+		name = "wren",
+		texture = rl.LoadTexture("./sheets/wren3.png"),
+		w = 32, h = 32,
+		tileCoords = {
 			{3,3}, //void
 			{3,2}, //wall
 			{2,1}, //player
@@ -269,8 +274,8 @@ LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 			{1,1}, //player walking odd frame
 			{0,0}, //player pushing even frame
 			{1,0}, //player pushing odd frame
-		}, {},
-		{
+		},
+		options = {
 			disableVoidTile = false,
 			floorTileAsVoid = false,
 			renderBackgroundImage = false,

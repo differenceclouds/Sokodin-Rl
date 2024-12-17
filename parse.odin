@@ -32,7 +32,7 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 	}
 
 	puzzle_title_prefixes: []string = {
-		`'`, `"`
+		`'`, `"`,
 	}
 
 	ParsingState :: enum {
@@ -51,7 +51,6 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 	set : [dynamic]Puzzle = {}
 	puzzle_title: string
 	lines: [dynamic]string = make([dynamic]string, allocator)
-	set_index: string
 	set_title := get_set_title(filepath)
 	puzzle_index : int = 1
 
@@ -74,22 +73,25 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 					state = .puzzleInit
 				}
 			case .puzzleInit:
-				set_index = fmt.tprintf("%v", puzzle_index)
 				if check_prefixes(line, puzzle_title_prefixes) {
 					puzzle_title = strings.trim_right_space(line)
 				}
 
 			case .puzzleRead:
 				if len(line) == 0 {
-					puzzle := puzzle_from_prepuzzle(set_title, puzzle_title, set_index, lines[:])
+					puzzle := puzzle_from_prepuzzle(set_title, puzzle_title, puzzle_index, lines[:])
 					append(&set, puzzle)
 					puzzle_index += 1
 					clear_dynamic_array(&lines)
-					state = .puzzleInit
 					puzzle_title = ""
+					state = .puzzleInit
 				} else {
-					trim := strings.trim_right_space(line)
-					append(&lines, trim)
+					if check_prefixes(line, puzzle_line_prefixes) {
+						trim := strings.trim_right_space(line)
+						append(&lines, trim)
+					} else if strings.has_prefix(line, "Title: ") {
+						puzzle_title = strings.trim_prefix(line, "Title: ")
+					}
 				}
 		}
 
@@ -101,11 +103,11 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 
 
 
-puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, set_index: string, lines: []string, ) -> Puzzle {
+puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, puzzle_index: int, lines: []string, ) -> Puzzle {
 	combine: string = strings.join(lines[:], "\n")
 	defer delete(combine)
 
-	titlebar: string = strings.concatenate({set_title, " #", set_index, "  ", puzzle_title })
+	titlebar: string = strings.concatenate({set_title, " #", fmt.tprint(puzzle_index), "  ", puzzle_title })
 	defer delete(titlebar)
 
 	puzzle: Puzzle = {

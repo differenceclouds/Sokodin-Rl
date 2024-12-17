@@ -17,7 +17,14 @@ GuiData :: struct {
 	sets_param: cstring,
 	tilemap_inc: bool,
 	tilemap_dec: bool,
+	puzzle_inc: bool,
+	puzzle_dec: bool,
 	randomize: bool,
+	undo: bool,
+	reset: bool,
+	mute: bool,
+	zoom_in: bool,
+	zoom_out: bool
 }
 
 
@@ -44,26 +51,52 @@ InitGui :: proc(set_of_sets: []string, set_index: int) -> GuiData {
 	}
 }
 
-unit : f32 = 24
-pad : f32 = 2
 
-DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
+
+DrawMainMenu :: proc(window: Window, data: ^GuiData) {
+
+}
+
+DrawGui :: proc(window: Window, data: ^GuiData, tilemap: Tilemap) {
+	unit : f32 = 24
+	pad : f32 = 2
 	using data
 
 
 	//FROM LEFT
 	w:f32 = f32(window.width / 2) * 2
 
-	x:f32 = pad
-	r:f32 = w - pad
+	x:f32 = 8
+	r:f32 = w - pad - 8
 	y:f32 = -1
 
-	// rl.GuiStatusBar({x, y, f32(rl.MeasureText(window.title, 14)), unit}, window.title)
-	statusbar_width := rl.MeasureTextEx(font, window.title, 18, 0)
-	rl.GuiStatusBar({x, y, statusbar_width[0], unit}, window.title)
+	if rl.GuiButton({x, y, unit, unit}, "#129#") do puzzle_dec = true
+	x += unit + pad
 
-	tilemap_name_size := rl.MeasureTextEx(font, tilemap.name, 18, 0)
-	rl.GuiStatusBar({x, f32(window.height - 22), tilemap_name_size[0] + 12, unit}, tilemap.name)
+	if rl.GuiButton({x, y, unit, unit}, "#134#") do puzzle_inc = true
+	x += unit + pad
+
+	// rl.GuiStatusBar({x, y, f32(rl.MeasureText(window.title, 14)), unit}, window.title)
+	statusbar_width := rl.MeasureTextEx(font, window.title, 16, 0)[0] + 16
+	rl.GuiStatusBar({x, y, statusbar_width, unit}, window.title)
+
+	bottom := f32(window.height - 22)
+	x = 8
+	if rl.GuiButton({x, bottom, unit, unit}, "#118#") do tilemap_dec = true
+	x += unit + pad
+
+	if rl.GuiButton({x, bottom, unit, unit}, "#119#") do tilemap_inc = true
+	x += unit + pad
+
+	if !randomize {
+		if rl.GuiButton({x, bottom, unit, unit}, "#62#") do randomize = !randomize
+	} else {
+		if rl.GuiButton({x, bottom, unit, unit}, "#78#") do randomize = !randomize
+	}
+	x += unit + pad
+
+	tilemap_name_size := rl.MeasureTextEx(font, tilemap.name, 16, 0)[0] + 16
+	rl.GuiStatusBar({x, bottom, tilemap_name_size, unit}, tilemap.name)
 
 	//FROM RIGHT
 
@@ -73,34 +106,23 @@ DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
 		change_set = true
 	}
 	r -= unit*6 + pad
-
-	if rl.GuiButton({r - unit*6, y, unit*6, unit}, "#191#Show Controls") do show_controls = true
-	r -= unit*6 + pad
-
-
-	if rl.GuiButton({r - unit, y, unit, unit}, "#119#") do tilemap_inc = true
+	if rl.GuiButton({r - unit, y, unit, unit}, "#224#") do zoom_in = true
+	r -= unit + pad
+	if rl.GuiButton({r - unit, y, unit, unit}, "#225#") do zoom_out = true
 	r -= unit + pad
 
-	if rl.GuiButton({r - unit, y, unit, unit}, "#118#") do tilemap_dec = true
-	r -= unit + pad
-
-	if !randomize {
-		if rl.GuiButton({r - unit, y, unit, unit}, "#62#") do randomize = !randomize
+	if !mute {
+		if rl.GuiButton({r - unit, y, unit, unit}, "#122#") do mute = true
 	} else {
-		if rl.GuiButton({r - unit, y, unit, unit}, "#78#") do randomize = !randomize
+		if rl.GuiButton({r - unit, y, unit, unit}, "#220#") do mute = false
 	}
 	r -= unit + pad
-
-	//FROM CENTER
-
-	// max: f32 = w - x - (w-r)
-	// c :f32 = (max / 2) + x
-
-	// // tw := clamp(unit*6, 24, max)
-	// if rl.GuiButton({x, pad, max, unit}, window.title) do show_controls = true
-
-
-
+	if rl.GuiButton({r - unit, y, unit, unit}, "#191#") do show_controls = true
+	r -= unit + pad
+	if rl.GuiButton({r - unit, y, unit, unit}, "#72#") do undo = true
+	r -= unit + pad
+	if rl.GuiButton({r - unit, y, unit, unit}, "#152#") do reset = true
+	r -= unit + pad
 
 
 	//FLOTING
@@ -112,9 +134,4 @@ DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
 }
 
 controls_message :: 
-`Move: Arrow Keys
-Restart: R
-Undo: Z
-Zoom: +/-
-Advance: Space
-Next/Prev Level: []`
+"Move: Arrow Keys\nRestart: R\nUndo: Z\nZoom: +/-\nAdvance: Space\nNext/Prev Level: brackets"
