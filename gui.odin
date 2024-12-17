@@ -29,7 +29,7 @@ GetSetsParam :: proc(set_of_sets: []string) -> cstring {
 	}
 	j := strings.join(set_titles[:], ";")
 	defer delete (j)
-	return to_cstring(j)
+	return fmt.ctprint(j)
 }
 
 InitGui :: proc(set_of_sets: []string, set_index: int) -> GuiData {
@@ -47,7 +47,7 @@ InitGui :: proc(set_of_sets: []string, set_index: int) -> GuiData {
 unit : f32 = 24
 pad : f32 = 2
 
-DrawGui :: proc(window: ^Window, data: ^GuiData) {
+DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
 	using data
 
 
@@ -62,33 +62,8 @@ DrawGui :: proc(window: ^Window, data: ^GuiData) {
 	statusbar_width := rl.MeasureTextEx(font, window.title, 18, 0)
 	rl.GuiStatusBar({x, y, statusbar_width[0], unit}, window.title)
 
-	// // c:f32 = f32(window.width / 2)
-
-	// //close
-	// if rl.GuiButton({pad,pad,unit,unit}, "#159#") {
-	// 	rl.CloseWindow()
-	// }
-
-	// x += unit + pad
-
-	// //minimize
-	// if rl.GuiButton({x,pad,unit, unit}, "#120#") {
-	// 	rl.MinimizeWindow()
-	// }
-
-	// x += unit + pad
-
-	// //fullscreen
-	// if rl.GuiButton({x,pad,unit, unit}, "#069#") {
-	// 	if rl.IsWindowMaximized() do rl.RestoreWindow()
-	// 	else do rl.MaximizeWindow()
-
-	// 	window.resize_flag = true
-	// }
-
-	// x += unit + pad
-
-
+	tilemap_name_size := rl.MeasureTextEx(font, tilemap.name, 18, 0)
+	rl.GuiStatusBar({x, f32(window.height - 22), tilemap_name_size[0] + 12, unit}, tilemap.name)
 
 	//FROM RIGHT
 

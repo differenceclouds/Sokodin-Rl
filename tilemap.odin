@@ -6,7 +6,7 @@ import "core:os"
 import "core:encoding/json"
 
 Tilemap :: struct {
-	name: string,
+	name: cstring,
 	texture: rl.Texture2D,
 	w: f32,
 	h: f32,
@@ -165,13 +165,11 @@ SetTileRenderer :: proc(tilemap: Tilemap) -> TileRenderer{
 
 
 InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
-
-
-	png := strings.concatenate({"./tilesets/sheets/", sheet, ".png"})
+	png := strings.concatenate({"./sheets/", sheet, ".png"})
 	defer delete(png)
-	sheet0 := rl.LoadTexture(to_cstring(png))
+	sheet0 := rl.LoadTexture(fmt.ctprint(png))
 	
-	fn := strings.concatenate({"./tilesets/sheets/", sheet, ".json"})
+	fn := strings.concatenate({"./sheets/", sheet, ".json"})
 	defer delete (fn)
 	data, ok := os.read_entire_file_from_filename(fn)
 	if !ok {
@@ -181,14 +179,14 @@ InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 
 	defer delete(data)
 
-	jason_data, err := json.parse(data)
+	json_data, err := json.parse(data)
 	if err != .None {
 		fmt.eprintln("couldn't parse json")
 		fmt.eprintln("Error:", err)
 	}
-	defer json.destroy_value(jason_data)
+	defer json.destroy_value(json_data)
 
-	frames := jason_data.(json.Object)["frames"].(json.Array)
+	frames := json_data.(json.Object)["frames"].(json.Array)
 
 	for o in frames {
 		// fmt.println(o)
@@ -200,7 +198,7 @@ InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 		x := f32(rect["x"].(json.Float))
 		y := f32(rect["y"].(json.Float))
 		append(tilemaps, Tilemap {
-			name,
+			fmt.ctprint(name),
 			sheet0,
 			w,
 			h,
@@ -216,12 +214,9 @@ InitSheets :: #force_inline proc(sheet: string, tilemaps: ^[dynamic]Tilemap) {
 
 
 LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
-	// tilemaps : [dynamic]Tilemap = {}
-
-
 	shoveIt := Tilemap {
-		"ShoveIt.png",
-		rl.LoadTexture("./tilesets/ShoveIt.png"),
+		"Shove It! The Warehouse Game - 1990",
+		rl.LoadTexture("./sheets/ShoveIt.png"),
 		24, 24,
 		{4, 4},
 		4,
@@ -251,123 +246,10 @@ LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 			// defaultZoom = 2,
 		}
 	}
-	append(tilemaps, shoveIt)
-
-
-	// sokobanPerfect := Tilemap {
-	// 	"Sokoban Perfect.png",
-	// 	rl.LoadTexture("./tilesets/Sokoban Perfect.png"),
-	// 	40, 54,
-	// 	{4, 4},
-	// 	4,
-	// 	{
-	// 		{5,0}, //void
-	// 		{2,0}, //wall
-	// 		{4,1}, //player
-	// 		{4,1}, //player on goal
-	// 		{3,0}, //box
-	// 		{4,0}, //box on goal
-	// 		{1,0}, //goal
-	// 		{0,0}, //floor
-
-	// 		{4,1}, //player resting
-	// 		{3,1}, //player walking
-	// 		{4,2}, //player pushing neutral
-	// 		{5,1}, //player walking odd frame
-	// 		{5,2}, //player pushing even frame
-	// 		{3,2}, //player pushing odd frame
-
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-	// 		{4,1}, //player
-
-	// 		{4,1}, // player Up resting
-	// 		{3,1}, // player Up walking even
-	// 		{4,2}, // player Up pushing neutral
-	// 		{5,1}, // player Up walking odd
-	// 		{5,2}, // player Up pushing even
-	// 		{3,2}, // player Up pushing odd
-
-	// 		{1,1}, // player Right resting
-	// 		{0,1}, // player Right walking even
-	// 		{1,2}, // player Right pushing neutral
-	// 		{2,1}, // player Right walking odd
-	// 		{2,2}, // player Right pushing even
-	// 		{0,2}, // player Right pushing odd
-
-	// 		{4,1}, // player Down resting
-	// 		{3,1}, // player Down walking even
-	// 		{4,2}, // player Down pushing neutral
-	// 		{5,1}, // player Down walking odd
-	// 		{5,2}, // player Down pushing even
-	// 		{3,2}, // player Down pushing odd
-
-	// 		{1,1}, // player Left resting
-	// 		{0,1}, // player Left walking even
-	// 		{1,2}, // player Left pushing neutral
-	// 		{2,1}, // player Left walking odd
-	// 		{2,2}, // player Left pushing even
-	// 		{0,2}, // player Left pushing odd
-	// 	}, {},
-	// 	{
-	// 		playerTileStyle = .TwoDirectionWithPoses,
-	// 		fixedPlayerRotation = true,
-	// 		mirrorPlayerSprites = true,
-	// 	}
-	// }
-	// append(&tilemaps, sokobanPerfect)
-	
-	// sneezingTiger := Tilemap {
-	// 	"sneezing_tiger.png",
-	// 	rl.LoadTexture("./tilesets/sneezing_tiger.png"),
-	// 	16, 16,
-	// 	{0, 0},
-	// 	0,
-	// 	{
-	// 		{0,0},
-	// 		{6,0},
-	// 		{2,7},
-	// 		{3,7},
-	// 		{0,7},
-	// 		{1,7},
-	// 		{4,7},
-	// 		{0,6},
-	// 	}, {},
-	// 	{}
-	// }
-	// append(&tilemaps, sneezingTiger)
-
-	Chip2 := Tilemap {
-		"chip2.png",
-		rl.LoadTexture("./tilesets/chip2.png"),
-		32, 32,
-		{0, 0},
-		0,
-		YASCTiles, YASCWallTiles,
-		YASCOptions
-	}
-	append(tilemaps, Chip2)
-
-	Chip3 := Tilemap {
-		"chip3.png",
-		rl.LoadTexture("./tilesets/chip3.png"),
-		32, 32,
-		{0, 0},
-		0,
-		YASCTiles, YASCWallTiles,
-		YASCOptions
-	}
-	append(tilemaps, Chip3)
 
 	Wren := Tilemap {
 		"wren",
-		rl.LoadTexture("./tilesets/wren3.png"),
+		rl.LoadTexture("./sheets/wren3.png"),
 		32, 32,
 		{0,0},
 		0,
@@ -397,6 +279,7 @@ LoadVariousTilemaps :: #force_inline proc(tilemaps: ^[dynamic]Tilemap){
 			// defaultZoom = 2,
 		}
 	}
+	append(tilemaps, shoveIt)
 	append(tilemaps, Wren)
 
 

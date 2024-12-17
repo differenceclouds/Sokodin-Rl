@@ -109,8 +109,8 @@ puzzle_from_prepuzzle :: proc(set_title: string, puzzle_title: string, set_index
 	defer delete(titlebar)
 
 	puzzle: Puzzle = {
-		title = to_cstring(puzzle_title),
-		title_bar = to_cstring(titlebar),
+		title = fmt.ctprint(puzzle_title),
+		title_bar = fmt.ctprint(titlebar),
 		tiles = fmt.tprintf("%v", combine)
 	}
 	measure_puzzle(&puzzle)

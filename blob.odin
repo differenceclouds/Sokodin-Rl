@@ -1,13 +1,8 @@
 package sokoban
 import rl "vendor:raylib"
 
-YASC_Blob_Quads : [5]rl.Vector2 = {
-	{0, 2}, {1, 2}, {2, 2},
-	{0, 3}, {1, 3}
-}
-YASC_Quad_Offsets : [4]rl.Vector2 = {
-	{0,0}, {1, 0}, {1,1}, {0, 1}
-}
+
+
 GetBlobIndex :: proc(cardinal1, corner, cardinal2: bool) -> int {
 	if cardinal1 && corner && cardinal2 {
 		return 2
@@ -27,7 +22,15 @@ GetBlobIndex :: proc(cardinal1, corner, cardinal2: bool) -> int {
 		}
 	}
 }
+
 draw_blob_wall :: proc(world: World, tilemap: Tilemap,index: i32, x:i32, y:i32) {
+	YASC_Blob_Quads : [5]rl.Vector2 = {
+		{0, 2}, {1, 2}, {2, 2},
+		{0, 3}, {1, 3}
+	}
+	YASC_Quad_Offsets : [4]rl.Vector2 = {
+		{0,0}, {1, 0}, {1,1}, {0, 1}
+	}
 	tileN := world.tiles[index - world.width] == .Wall
 	tileNE := world.tiles[index - world.width + 1] == .Wall
 	tileE := world.tiles[index + 1] == .Wall

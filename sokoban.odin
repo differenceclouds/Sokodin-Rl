@@ -6,11 +6,7 @@ import "core:strconv"
 import "core:math/rand"
 import rl "vendor:raylib"
 
-//memory debug imports
-import "core:log"
-import "core:mem"
 
-DEBUG_MEM :: true
 
 Window :: struct { 
 	title: cstring,
@@ -66,10 +62,10 @@ GameState :: enum {
 }
 
 Player :: struct {
-    x: i32,
-    y: i32,
-    state: PlayerState,
-    direction: Direction,
+	x: i32,
+	y: i32,
+	state: PlayerState,
+	direction: Direction,
 }
 
 PlayerState :: enum {
@@ -328,7 +324,7 @@ run_game :: proc() {
 	rl.InitWindow(window.width, window.height, window.title)
 	rl.SetTextureFilter(rl.GetFontDefault().texture, .POINT)
 	rl.SetTargetFPS(window.fps)
-	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
+	rl.GuiLoadStyle("./style_sunny.old.rgs")
 	rl.InitAudioDevice()
 
 	fmt.printfln("window scale: %v", rl.GetWindowScaleDPI())
@@ -612,7 +608,7 @@ run_game :: proc() {
 			}
 		}
 
- 		if movedBoxOntoGoal {
+		if movedBoxOntoGoal {
 			rl.PlaySound(Sounds[3])
 		} else if movedBox {
 			rl.PlaySound(Sounds[2])
@@ -743,42 +739,42 @@ run_game :: proc() {
 		}
 
 		rl.BeginDrawing()
-			rl.ClearBackground(rl.PINK)
+			rl.ClearBackground(rl.BLACK)
 
 
 			rl.BeginMode2D(camera)
 				if !tilemap.options.singleLayer {
-			    	draw_world_tiles(world, tilemap, tilerenderer.baseLayerRects, player, false)
+					draw_world_tiles(world, tilemap, tilerenderer.baseLayerRects, player, false)
 				}
-		    	draw_world_tiles(world, tilemap, tilerenderer.objectLayerRects, player, true)
-		    rl.EndMode2D()
+				draw_world_tiles(world, tilemap, tilerenderer.objectLayerRects, player, true)
+			rl.EndMode2D()
 
-		    if state == .YouWin {
-		    	message := fmt.ctprintf("Solved in %v moves! Try the next one?", len(record.moves))
+			if state == .YouWin {
+				message := fmt.ctprintf("Solved in %v moves! Try the next one?", len(record.moves))
 
-		    	x := window.width/2 - rl.MeasureText(message, 30)/2
-		    	rl.DrawText(message, x - 2, 94, 30, rl.BLACK)
-		    	rl.DrawText(message, x, 96, 30, rl.RAYWHITE)
+				x := window.width/2 - rl.MeasureText(message, 30)/2
+				rl.DrawText(message, x - 2, 94, 30, rl.BLACK)
+				rl.DrawText(message, x, 96, 30, rl.RAYWHITE)
 
-		    	if hi_score {
-		    		hs :cstring = "NEW RECORD"
-		    		x = window.width / 2 - rl.MeasureText(hs, 30) / 2
-		    		rl.DrawText(hs, x - 2, 130, 30, rl.MAGENTA)
-		    		rl.DrawText(hs, x, 132, 30, rl.YELLOW)
-		    	}
-		    }
-		    if puzzle.probably_unwinnable {
-		    	rl.DrawText(UnsolvableMessage, 22, window.height - 50, 30, rl.BLACK)
-		    	rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
-		    }
+				if hi_score {
+					hs: cstring = "NEW RECORD"
+					x = window.width / 2 - rl.MeasureText(hs, 30) / 2
+					rl.DrawText(hs, x - 2, 130, 30, rl.MAGENTA)
+					rl.DrawText(hs, x, 132, 30, rl.YELLOW)
+				}
+			}
+			if puzzle.probably_unwinnable {
+				rl.DrawText(UnsolvableMessage, 22, window.height - 50, 30, rl.BLACK)
+				rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
+			}
 
-		    DrawGui(&window, &gui_data)
+			DrawGui(&window, &gui_data, tilemap)
 
-		    if show_hud_message {
-		    	hud_message := fmt.ctprintf("zoom: %v", int(camera.zoom * 100))		    	
-		    	rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
+			if show_hud_message {
+				hud_message := fmt.ctprintf("zoom: %v", int(camera.zoom * 100))		    	
+				rl.DrawText(hud_message, window.width - 177, 13, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 175, 15, 30,  rl.WHITE)
-		    }
+			}
 		rl.EndDrawing()
 	}
 }
@@ -788,45 +784,6 @@ hi_score := false
 UnsolvableMessage :: "this puzzle is unsolvable... press ] to skip"
 
 
-main :: proc() {
-    tracking_allocator : mem.Tracking_Allocator
-    // when DEBUG_MEM {
-        context.logger = log.create_console_logger()
-        default_allocator := context.allocator
-        mem.tracking_allocator_init(&tracking_allocator, default_allocator)
-        context.allocator = mem.tracking_allocator(&tracking_allocator)
-        reset_tracking_allocator :: proc(a: ^mem.Tracking_Allocator) -> bool {
-            err := false
-
-            for _, value in a.allocation_map {
-                fmt.printf("%v: Leaked %v bytes\n", value.location, value.size)
-                err = true
-            }
-
-            mem.tracking_allocator_clear(a)
-            return err
-        }
-    // }
-
-    // run_game(tracking_allocator)
-    run_game()
-
-
-    when DEBUG_MEM {
-        if len(tracking_allocator.bad_free_array) > 0 {
-            for b in tracking_allocator.bad_free_array {
-                log.errorf("Bad free at: %v", b.location)
-            }
-
-            // libc.getchar()
-            panic("Bad free detected")
-        }
-        if reset_tracking_allocator(&tracking_allocator) {
-            // libc.getchar()
-        }
-    }
-    mem.tracking_allocator_destroy(&tracking_allocator)
-}
 
 
 
