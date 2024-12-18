@@ -310,11 +310,21 @@ SetCamera :: proc(camera: ^rl.Camera2D, window: Window, world: World, tilemap: T
 }
 
 
+SoundType :: enum {
+	Restart,
+	Complete,
+	Push,
+	Socket,
+	Step,
+	Undo,
+	Oof,
+	Crowd2,
+	Crowd3,
+	Crowd4
+}
 
 
-// run_game :: proc(tracking_allocator : mem.Tracking_Allocator) {
 run_game :: proc() {
-// main :: proc() {
 
 	fmt.println("default directory: ",rl.GetWorkingDirectory())
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
@@ -325,23 +335,35 @@ run_game :: proc() {
 	rl.InitWindow(window.width, window.height, window.title)
 	rl.SetTextureFilter(rl.GetFontDefault().texture, .POINT)
 	rl.SetTargetFPS(window.fps)
-	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
+	rl.GuiLoadStyle("./rgui/notey2.rgs")
+	// rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
 	rl.GuiLoadIcons("./rgui/iconset.rgi", false)
 	rl.InitAudioDevice()
 
 	fmt.printfln("window scale: %v", rl.GetWindowScaleDPI())
 
 
-	Sounds : []rl.Sound = {
-		rl.LoadSound("./sounds/chip/bummer.wav"),
-		rl.LoadSound("./sounds/chip/exit.wav"),
-		rl.LoadSound("./sounds/chip/push.wav"),
-		rl.LoadSound("./sounds/chip/socket.wav"),
-		rl.LoadSound("./sounds/stone1.wav"),
-		rl.LoadSound("./sounds/stone1_r.wav"),
-		rl.LoadSound("./sounds/oof.wav")
-
+	Sounds : [SoundType]rl.Sound = {
+		.Restart = rl.LoadSound("./sounds/chip/bummer.wav"),
+		.Complete = rl.LoadSound("./sounds/chip/exit.wav"),
+		.Push = rl.LoadSound("./sounds/chip/push.wav"),
+		.Socket = rl.LoadSound("./sounds/chip/socket.wav"),
+		.Step = rl.LoadSound("./sounds/stone1.wav"),
+		.Undo = rl.LoadSound("./sounds/stone1_r.wav"),
+		.Oof = rl.LoadSound("./sounds/oof.wav"),
+		.Crowd2 = rl.LoadSound("./sounds/CROWD_2.WAV"),
+		.Crowd3 = rl.LoadSound("./sounds/CROWD_3.WAV"),
+		.Crowd4 = rl.LoadSound("./sounds/CROWD_4.WAV")
 	}
+
+	key_color : rl.Color = {0,127,127,255}
+	// envy_font := rl.LoadFontFromImage(rl.LoadImage("./rgui/envy_font.png"), key_color, ' ')
+	courier_font := rl.LoadFontFromImage(rl.LoadImage("./rgui/courier_14_extended.png"), key_color, ' ')
+	// fmt.println("glyph count: ",courier_font.glyphCount)
+
+	// for i:i32= 0; i < courier_font.glyphCount; i += 1 {
+	// 	fmt.println("glyph ", i, courier_font.glyphs[i])
+	// }
 
 	game := Game {
 		pause     = true,
@@ -408,7 +430,7 @@ run_game :: proc() {
 	tilemap := tilemap_list[tilemap_index]
 	tilerenderer := SetTileRenderer(tilemap)
 
-	gui_data := InitGui(set_of_sets, set_index)
+	gui_data := InitGui(set_of_sets, set_index, courier_font)
 
 	camera : rl.Camera2D
 	SetCamera(&camera, window, world, tilemap)
@@ -504,7 +526,7 @@ run_game :: proc() {
 					if success {
 						player = new_player
 						game.moveCount -= 1
-						if !gui_data.mute do rl.PlaySound(Sounds[5])
+						if !gui_data.mute do rl.PlaySound(Sounds[.Undo])
 					} else {
 						fmt.printf("Invalid Undo")
 					}
@@ -626,19 +648,20 @@ run_game :: proc() {
 
 		if !gui_data.mute{
 			if movedBoxOntoGoal {
-				rl.PlaySound(Sounds[3])
+				rl.PlaySound(Sounds[.Socket])
 			} else if movedBox {
-				rl.PlaySound(Sounds[2])
+				rl.PlaySound(Sounds[.Push])
 			} else if moved {
-				rl.PlaySound(Sounds[4])
+				rl.PlaySound(Sounds[.Step])
 			} else if tryMoved {
-				rl.PlaySound(Sounds[6])
+				rl.PlaySound(Sounds[.Oof])
 			}
 
 			if justWon {
-				rl.PlaySound(Sounds[1])
+				CompleteSounds:[]rl.Sound = {Sounds[.Complete], Sounds[.Crowd2], Sounds[.Crowd3], Sounds[.Crowd4]}
+				rl.PlaySound(rand.choice(CompleteSounds))
 			} else if user_input.reset || gui_data.reset {
-				rl.PlaySound(Sounds[0])
+				rl.PlaySound(Sounds[.Restart])
 			}
 		}
 
@@ -795,13 +818,15 @@ run_game :: proc() {
 				rl.DrawText(UnsolvableMessage, 24, window.height - 48, 30, rl.WHITE)
 			}
 
-			DrawGui(window, &gui_data, tilemap)
+			DrawGui(&window, &gui_data, tilemap)
 
 			if show_hud_message {
 				hud_message := fmt.ctprintf("zoom: %v", int(camera.zoom * 100))		    	
 				rl.DrawText(hud_message, window.width - 157, window.height - 36, 30,  rl.BLACK)
 				rl.DrawText(hud_message, window.width - 155, window.height - 34, 30,  rl.WHITE)
 			}
+
+
 		rl.EndDrawing()
 	}
 }
