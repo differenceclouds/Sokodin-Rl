@@ -197,9 +197,11 @@ DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
 
 UpdateSetPanel :: proc(gui_data: ^GuiData) {
 	using gui_data
-	file := strings.concatenate({"./levels/", set_filenames[set_result]}) 
-	if text, ok := os.read_entire_file(file); ok {
-		set_panel.panel_text = cstring(raw_data(text))
+	file := strings.concatenate({"./levels/", set_filenames[set_result]})
+	defer delete(file)
+	if data, ok := os.read_entire_file(file); ok {
+		delete(set_panel.panel_text)
+		set_panel.panel_text = cstring(raw_data(data))
 		set_panel.content_size = rl.MeasureTextEx(set_panel_font, set_panel.panel_text, 14, 0)
 		set_panel.panel_title = fmt.ctprint(filepath.stem(file))
 	} else {

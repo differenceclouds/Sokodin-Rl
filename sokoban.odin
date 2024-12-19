@@ -328,6 +328,7 @@ run_game :: proc() {
 
 	fmt.println("default directory: ",rl.GetWorkingDirectory())
 	rl.ChangeDirectory(rl.GetApplicationDirectory())
+	rl.ChangeDirectory("./resources")
 
 	control_flags := rl.ConfigFlags{.WINDOW_RESIZABLE, .WINDOW_HIGHDPI}
 	window := Window{"Welcome to the Sokoban", 960, 720, 60, control_flags, false}
@@ -335,8 +336,8 @@ run_game :: proc() {
 	rl.InitWindow(window.width, window.height, window.title)
 	rl.SetTextureFilter(rl.GetFontDefault().texture, .POINT)
 	rl.SetTargetFPS(window.fps)
-	rl.GuiLoadStyle("./rgui/notey2.rgs")
-	// rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
+	// rl.GuiLoadStyle("./rgui/notey2.rgs")
+	rl.GuiLoadStyle("./rgui/style_sunny.old.rgs")
 	rl.GuiLoadIcons("./rgui/iconset.rgi", false)
 	rl.InitAudioDevice()
 
@@ -431,6 +432,7 @@ run_game :: proc() {
 	tilerenderer := SetTileRenderer(tilemap)
 
 	gui_data := InitGui(set_of_sets, set_index, courier_font)
+	defer delete(gui_data.set_panel.panel_text)
 
 	camera : rl.Camera2D
 	SetCamera(&camera, window, world, tilemap)

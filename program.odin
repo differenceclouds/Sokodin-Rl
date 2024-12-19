@@ -25,8 +25,6 @@ main :: proc() {
 			return err
 		}
 	}
-
-	// run_game(tracking_allocator)
 	run_game()
 
 
@@ -35,12 +33,9 @@ main :: proc() {
 			for b in tracking_allocator.bad_free_array {
 				log.errorf("Bad free at: %v", b.location)
 			}
-
-			// libc.getchar()
 			panic("Bad free detected")
 		}
 		if reset_tracking_allocator(&tracking_allocator) {
-			// libc.getchar()
 		}
 	}
 	mem.tracking_allocator_destroy(&tracking_allocator)

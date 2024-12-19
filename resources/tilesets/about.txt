@@ -1,0 +1,3 @@
+This folder is included in case someone wants to recompile the multi-sheets with different tilesets using TexturePacker. if you need the extra 2MB, this folder can be deleted.
+
+The bottom two rows of tiles in YASC-format tilesets are unused.
