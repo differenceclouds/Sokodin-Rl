@@ -1,0 +1,1110 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"set",
+				"set_panel"
+			],
+			[
+				"panel",
+				"panel_data"
+			],
+			[
+				"resi",
+				"resize_flag"
+			],
+			[
+				"bor",
+				"ToggleBorderlessWindowed()"
+			],
+			[
+				"set_in",
+				"set_info_window"
+			],
+			[
+				"gl",
+				"glyphCount"
+			],
+			[
+				"cour",
+				"courier_font"
+			],
+			[
+				"glyph",
+				"glyphCount"
+			],
+			[
+				"Draw",
+				"DrawTextEx"
+			],
+			[
+				"LoadFont",
+				"LoadFont(fileName: cstring) "
+			],
+			[
+				"w",
+				"width"
+			],
+			[
+				"Meas",
+				"MeasureTextEx"
+			],
+			[
+				"content",
+				"content_size"
+			],
+			[
+				"pan",
+				"panel_text"
+			],
+			[
+				"sc",
+				"scrollbounds"
+			],
+			[
+				"Begin",
+				"BeginScissorMode(x, y, width, height: c.int)"
+			],
+			[
+				"DrawText",
+				"DrawTextEx(font: Font, text: cstring, position: Vector2, fontSize: f32, spacing: f32, tint: Color)"
+			],
+			[
+				"Rec",
+				"Rectangle"
+			],
+			[
+				"scr",
+				"scroll_offset"
+			],
+			[
+				"GuiScr",
+				"GuiScrollPanel(bounds: Rectangle, text: cstring, content: Rectangle, scroll: ^Vector2, view: ^Rectangle) "
+			],
+			[
+				"Comple",
+				"CompleteSounds"
+			],
+			[
+				"Cr",
+				"Crowd2"
+			],
+			[
+				"C",
+				"Complete"
+			],
+			[
+				"Sound",
+				"SoundType"
+			],
+			[
+				"has",
+				"has_prefix"
+			],
+			[
+				"z",
+				"zoom_out"
+			],
+			[
+				"guid",
+				"gui_data"
+			],
+			[
+				"zoom",
+				"zoom_out"
+			],
+			[
+				"p",
+				"puzzle_inc"
+			],
+			[
+				"GuiLoad",
+				"GuiLoadIcons(fileName: cstring, loadIconsName: bool) "
+			],
+			[
+				"tilemap_",
+				"tilemap_index"
+			],
+			[
+				"directory",
+				"GetWorkingDirectory() "
+			],
+			[
+				"star",
+				"start_dir"
+			],
+			[
+				"bl",
+				"blobCoords"
+			],
+			[
+				"YAS",
+				"YASC_Blob_Quads"
+			],
+			[
+				"ctp",
+				"ctprint"
+			],
+			[
+				"ct",
+				"ctprint"
+			],
+			[
+				"Tile",
+				"Tilemap"
+			],
+			[
+				"source",
+				"source_rects"
+			],
+			[
+				"of",
+				"offsets"
+			],
+			[
+				"sourc",
+				"source_rects"
+			],
+			[
+				"sour",
+				"source_rects"
+			],
+			[
+				"draw",
+				"draw_blob_wall"
+			],
+			[
+				"odin_",
+				"ODIN_OS"
+			],
+			[
+				"continue_",
+				"continue_level_result"
+			],
+			[
+				"continu",
+				"continue_level_query"
+			],
+			[
+				"clear",
+				"clear_dynamic_array"
+			],
+			[
+				"File",
+				"File_Info"
+			],
+			[
+				"cs",
+				"cstring_count"
+			],
+			[
+				"cstr",
+				"cstring_count"
+			],
+			[
+				"Font",
+				"GuiGetFont() "
+			],
+			[
+				"Mea",
+				"MeasureTextEx(font: Font, text: cstring, fontSize: f32, spacing: f32) "
+			],
+			[
+				"dest",
+				"destroy_value"
+			],
+			[
+				"clear_",
+				"clear_dynamic_array"
+			],
+			[
+				"Tex",
+				"Texture2D"
+			],
+			[
+				"TEXT_ALI",
+				"TEXT_ALIGN_CENTER"
+			],
+			[
+				"TEXT",
+				"TEXT_ALIGNMENT"
+			],
+			[
+				"GuiStyle",
+				"GuiSetStyle(control: GuiControl, property: GuiStyleProp, value: c.int)"
+			],
+			[
+				"MEASu",
+				"MeasureTextEx(font: Font, text: cstring, fontSize: f32, spacing: f32) "
+			],
+			[
+				"win",
+				"window.title"
+			],
+			[
+				"measure",
+				"MeasureText(text: cstring, fontSize: c.int) "
+			],
+			[
+				"get",
+				"get_set_title"
+			],
+			[
+				"trim",
+				"trim_right_space(s: string) "
+			],
+			[
+				"GuiStat",
+				"GuiStatusBar(bounds: Rectangle, text: cstring) "
+			],
+			[
+				"Gui",
+				"GuiLabel(bounds: Rectangle, text: cstring) "
+			],
+			[
+				"not",
+				"notInside"
+			],
+			[
+				"for",
+				"force_inline"
+			],
+			[
+				"Void",
+				"Void2"
+			],
+			[
+				"V",
+				"Tile.Void"
+			],
+			[
+				"init",
+				"initY"
+			],
+			[
+				"moved",
+				"movedBox"
+			],
+			[
+				"pl",
+				"PlaySound(sound: Sound)"
+			],
+			[
+				"move",
+				"movedBoxOntoGoal"
+			],
+			[
+				"Icon",
+				"SetWindowIcon(image: Image)"
+			],
+			[
+				"LoadImage",
+				"LoadImageFromTexture(texture: Texture2D) "
+			],
+			[
+				"SetWin",
+				"SetWindowIcon(image: Image)"
+			],
+			[
+				"gui",
+				"GuiCheckBox(bounds: Rectangle, text: cstring, checked: ^bool) "
+			],
+			[
+				"r",
+				"right"
+			],
+			[
+				"rand",
+				"randomize"
+			],
+			[
+				"tilem",
+				"tilemap_inc"
+			],
+			[
+				"Camer",
+				"Camera2D"
+			],
+			[
+				"tilere",
+				"tilerenderer"
+			],
+			[
+				"tilemap_in",
+				"tilemap_index"
+			],
+			[
+				"tile",
+				"tilemap_inc"
+			],
+			[
+				"YA",
+				"YASCWallTiles"
+			],
+			[
+				"puz",
+				"puzzle_index"
+			],
+			[
+				"all",
+				"allocator"
+			],
+			[
+				"rec",
+				"record"
+			],
+			[
+				"data",
+				"data_present"
+			],
+			[
+				"Wr",
+				"WriteSaveDataToDisk()"
+			],
+			[
+				"cur",
+				"current_hi_score"
+			],
+			[
+				"reco",
+				"record"
+			],
+			[
+				"curr",
+				"current_save"
+			],
+			[
+				"new",
+				"new_record"
+			],
+			[
+				"SetWi",
+				"SetWindowSize(width, height: c.int)"
+			],
+			[
+				"GetRe",
+				"GetRenderWidth() "
+			],
+			[
+				"Toggle",
+				"ToggleBorderlessWindowed()"
+			],
+			[
+				"SetW",
+				"SetWindowTitle"
+			],
+			[
+				"GetScree",
+				"GetScreenHeight() "
+			],
+			[
+				"change",
+				"ChangeDirectory(dir: cstring) "
+			],
+			[
+				"meas",
+				"measure_puzzle(&puzzle"
+			],
+			[
+				"set_",
+				"set_index"
+			],
+			[
+				"GetSet",
+				"GetSetOfSets"
+			],
+			[
+				"clone",
+				"clone_to_cstring"
+			],
+			[
+				"You",
+				"YouWinMessages"
+			],
+			[
+				"Wal",
+				"WallTilesBlob"
+			],
+			[
+				"bit",
+				"bit_set"
+			],
+			[
+				"Vec",
+				"Vector2"
+			],
+			[
+				"rest",
+				"restingPose"
+			],
+			[
+				"de",
+				"defaultPlayerOnRest"
+			],
+			[
+				"def",
+				"defaultPlayerOnRest"
+			],
+			[
+				"dir",
+				"direction"
+			],
+			[
+				"mirror",
+				"mirrorPlayerSprites"
+			],
+			[
+				"rota",
+				"fixedPlayerRotation"
+			],
+			[
+				"sok",
+				"sokobanPerfect"
+			],
+			[
+				"sho",
+				"shoveIt"
+			],
+			[
+				"TileRe",
+				"TileRendererOptions"
+			],
+			[
+				"defaul",
+				"defaultZoom"
+			],
+			[
+				"player",
+				"playerTileStyle"
+			],
+			[
+				"Text",
+				"Texture2D"
+			],
+			[
+				"playeron",
+				"usePlayerOnGoalTile"
+			],
+			[
+				"userpl",
+				"usePlayerOnGoalTile"
+			],
+			[
+				"pref",
+				"has_prefix(s, prefix: string) "
+			],
+			[
+				"Init",
+				"InitGui"
+			],
+			[
+				"Get",
+				"GetSetsParam"
+			],
+			[
+				"read",
+				"read_directory"
+			],
+			[
+				"prin",
+				"printf"
+			],
+			[
+				"nex",
+				"next_world"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 367.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"package",
+				"Package Control: List Packages"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"deb",
+				"Debugger: Add or Select Configuration"
+			],
+			[
+				"",
+				"Debugger"
+			],
+			[
+				"debugger",
+				"Debugger: Add Configuration"
+			],
+			[
+				"debu",
+				"Debugger: Add Configuration"
+			],
+			[
+				"debugger: add",
+				"Debugger: Add Configuration"
+			],
+			[
+				"debugger: inst",
+				"Debugger: Install Adapters"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"lsp ",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"pac",
+				"Package Control: Remove Package"
+			],
+			[
+				"lsp togg",
+				"LSP: Toggle Log Panel"
+			],
+			[
+				"lsp en",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"lsp dis",
+				"LSP: Disable Language Server in Project"
+			],
+			[
+				"lsp trou",
+				"LSP: Troubleshoot Server"
+			],
+			[
+				"lsp tog",
+				"LSP: Toggle Log Panel"
+			],
+			[
+				"lsp eb",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"lsp ena",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"lsp",
+				"Preferences: LSP Settings"
+			],
+			[
+				"lsp enab",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"lsp enable",
+				"LSP: Enable Language Server in Project"
+			],
+			[
+				"add",
+				"Package Control: Add Channel"
+			],
+			[
+				"pack",
+				"Preferences: Package Control Settings"
+			],
+			[
+				"instal",
+				"Install Package Control"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"pa",
+				"Package Control: Enable Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Disable Package"
+			],
+			[
+				"Package Control: Auto Close",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"Package Control: Instal",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 258.0,
+		"history":
+		[
+			"os.environ[\"PATH\"]",
+			"import os;"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/Users/Radagast/odin-projects/sokoban/spritefont.odin",
+		"/Users/Radagast/odin-projects/sokoban/spritefont.sublime-project",
+		"/Users/Radagast/odin-projects/sokoban/tilemap.odin",
+		"/Users/Radagast/odin-projects/sokoban/gui.odin",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Haikemono.txt",
+		"/Users/Radagast/odin-projects/sokoban/parse.odin",
+		"/Users/Radagast/odin-projects/sokoban/sokoban.odin",
+		"/Users/Radagast/odin-projects/sokoban/program.odin",
+		"/Users/Radagast/Odin/vendor/raylib/raylib.odin",
+		"/Users/Radagast/odin-projects/sokoban/sounds.odin",
+		"/Users/Radagast/odin-projects/sokoban/record.odin",
+		"/Users/Radagast/odin-projects/sokoban/directory.odin",
+		"/Users/Radagast/odin-projects/sokoban/latin_extended_nolabels",
+		"/Users/Radagast/odin-projects/sokoban/latin_supplement.txt",
+		"/Users/Radagast/odin-projects/sokoban/ascii.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Numbers.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch XII.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch XI.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch X.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch VIII.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch VII.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch IX.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch III.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch IV.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/Sasquatch Complete/Sasquatch VI.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Chrysalis Variations.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/more levels/JD_Sokoban_collections/Chrysalis_variations.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Thinking-Rabbit-Original-Plus-Extra.txt",
+		"/Users/Radagast/odin-projects/sokoban/levels/Haikemono.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Miniatures.txt",
+		"/Users/Radagast/odin-projects/sokoban/resources/levels/Pufiban.txt",
+		"/Users/Radagast/odin-projects/sokoban/blob.odin",
+		"/Users/Radagast/odin-projects/sokoban/sokoban.sublime-project",
+		"/Users/Radagast/odin-projects/sokoban/darwin_dir.odin",
+		"/Users/Radagast/odin-projects/sokoban/utility.odin",
+		"/Users/Radagast/odin-projects/sokoban/sound.odin",
+		"/Users/Radagast/odin-projects/sokoban/random/links.txt",
+		"/Users/Radagast/Odin/core/strings/strings.odin",
+		"/Users/Radagast/odin-projects/sokoban/tilesets/sheets/sheets-0.json",
+		"/Users/Radagast/Odin/vendor/raylib/raygui.odin",
+		"/Users/Radagast/odin-projects/sokoban/levels/testing.txt",
+		"/Users/Radagast/odin-projects/sokoban/maps.odin",
+		"/Users/Radagast/odin-projects/sokoban/odin_template.sublime-project",
+		"/Users/Radagast/odin-projects/sokoban/tilesets/diagrams/YASC coorespondance",
+		"/Users/Radagast/odin-projects/sokoban/levels/Yoshio Automatic.txt",
+		"/Users/Radagast/odin-projects/sokoban/levels/Sasquatch.txt",
+		"/Users/Radagast/odin-projects/sokoban/helloworld.odin",
+		"/Users/Radagast/odin-projects/sokoban/helloworld.odin.json",
+		"/Users/Radagast/odin-projects/sublime_template/odin_template.sublime-project",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/bgi_fonts.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/bgi_fonts.sublime-project",
+		"/private/etc/zprofile",
+		"/Users/Radagast/python/beyond/parse.py",
+		"/Users/Radagast/python/pyramid/decode.py",
+		"/Users/Radagast/python/pyramid/stairs.py",
+		"/Users/Radagast/python/pyramid/message.txt",
+		"/Users/Radagast/.config/mpv/input.conf",
+		"/Users/Radagast/Desktop/animationplayer_example.cs",
+		"/Users/Radagast/htdocs/homepage/src/_includes/work.njk",
+		"/Users/Radagast/htdocs/homepage/src/_data/admin/index.html",
+		"/Users/Radagast/htdocs/homepage/src/admin/config.yml",
+		"/Users/Radagast/odin-projects/wangtiles/wangtiles.odin",
+		"/Users/Radagast/Desktop/idrive.js",
+		"/Users/Radagast/VSProjects/LesserKeys/Content/Levels/StaticObjects.tsx",
+		"/Users/Radagast/VSProjects/LesserKeys/Content/Levels/BlocksLarge.tsx",
+		"/Users/Radagast/VSProjects/LesserKeys/Content/Levels/BoxDrawing.tsx",
+		"/Users/Radagast/odin-projects/game_of_life/game_of_life.odin",
+		"/Users/Radagast/odin-projects/wang/mazegen.odin",
+		"/Users/Radagast/.nuget/NuGet/NuGet.Config",
+		"/Users/Radagast/VSProjects/LesserKeys/obj/project.assets.json",
+		"/Users/Radagast/htdocs/whoknew/assets/scss/styles.scss",
+		"/Users/Radagast/htdocs/whoknew/assets/scss/templates/home.scss",
+		"/Users/Radagast/htdocs/whoknew/site/snippets/blocks/markdown.php",
+		"/Users/Radagast/htdocs/whoknew/site/snippets/blocks/twoup.php",
+		"/Users/Radagast/htdocs/whoknew/assets/scss/_global_vars.scss",
+		"/Users/Radagast/htdocs/whoknew/site/snippets/header.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/home.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/stack-card.php",
+		"/Users/Radagast/htdocs/whoknew/site/models/stack-card.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/stack.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/stack-old.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/signup.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/rules.php",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/site.yml",
+		"/Users/Radagast/htdocs/whoknew/site/snippets/footer.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/default.php",
+		"/Users/Radagast/htdocs/whoknew/site/templates/card-old.php",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/pages/home.yml",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/blocks/twoup.yml",
+		"/Users/Radagast/htdocs/whoknew/site/models/stack.php",
+		"/Users/Radagast/htdocs/whoknew/kirbyold/config/api/models/File.php",
+		"/Users/Radagast/htdocs/whoknew/kirby/config/api/models/Page.php",
+		"/Users/Radagast/Desktop/copytest.html",
+		"/Users/Radagast/htdocs/whoknew/kirby/config/blocks/markdown/markdown.yml",
+		"/Users/Radagast/htdocs/whoknew/site/snippets/blocks/synopsis.php",
+		"/Users/Radagast/htdocs/whoknew/assets/scss/templates/rules.scss",
+		"/Users/Radagast/htdocs/whoknew/assets/graphics/card_outline.svg",
+		"/Users/Radagast/Desktop/table.html",
+		"/Users/Radagast/htdocs/whoknew/site/templates/splash.php",
+		"/Users/Radagast/htdocs/whoknew/.htaccess",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/pages/rules.yml",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/pages/splash.yml",
+		"/Users/Radagast/htdocs/whoknew/site/blueprints/pages/splash-directory.yml",
+		"/Users/Radagast/htdocs/whoknew/whoknew.sublime-project",
+		"/Users/Radagast/htdocs/whoknew/whoknew.sublime-workspace",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/euro.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/bold.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/glyph_list.odin",
+		"/Users/Radagast/odin-projects/tteesstt/test.odin",
+		"/Users/Radagast/odin-projects/type_test/type_test.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/character_list.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/goth.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/lcom.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/litt.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/sans.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/scri.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/simp.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/trip.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/tscr.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/trip.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/simp.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/scri.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/sans.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/lcom.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/graphics.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/goth.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/untranslated/bold.odin",
+		"/Users/Radagast/odin-projects/bgi_fonts_odin/font_data/litt.odin"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 127.0,
+		"where_history":
+		[
+			"/Users/Radagast/odin-projects/sokoban",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"-",
+			"gui_data",
+			"courier",
+			"\n",
+			"¡\n¢\n£\n¤\n¥\n¦\n§\n¨\n©\nª\n«\n¬\n\t\n®\n¯\n°\n±\n²\n³\n´\nµ\n¶\n·\n¸\n¹\nº\n»\n¼\n½\n¾\n¿\nÀ\nÁ\nÂ\nÃ\nÄ\nÅ\nÆ\nÇ\nÈ\nÉ\nÊ\nË\nÌ\nÍ\nÎ\nÏ\nÐ\nÑ\nÒ\nÓ\nÔ\nÕ\nÖ\n×\nØ\nÙ\nÚ\nÛ\nÜ\nÝ\nÞ\nß\nà\ná\nâ\nã\nä\nå\næ\nç\nè\né\nê\në\nì\ní\nî\nï\nð\nñ\nò\nó\nô\nõ\nö\n÷\nø\nù\nú\nû\nü\ný\nþ\nÿ",
+			"result",
+			"set_index",
+			"initgui",
+			"measuretext",
+			"courier",
+			"envy",
+			"measure",
+			"set_info_scrollpanel",
+			"crowd",
+			"crows",
+			"sounds",
+			"playsound",
+			"sounds",
+			"check_prefixes",
+			"playsound",
+			";Title: ",
+			"Title:",
+			"Author:",
+			"moved",
+			"zoom",
+			"mute",
+			"puzzle_index",
+			"playsound",
+			"game.",
+			"undo",
+			"reset",
+			"undo",
+			"_inc",
+			"tilemap_index",
+			"simpleload",
+			"tilemap",
+			"tilemap_inc",
+			"data",
+			"selectp",
+			"read_puzzle",
+			"package sokoban",
+			"cstring",
+			"perfect",
+			"yasctiles",
+			"title",
+			"blob",
+			"draw_world_tiles",
+			"blob",
+			"drawBlobWalls",
+			"rand",
+			"random",
+			"user_input",
+			"process",
+			"drawblobwalls",
+			"drawtexture",
+			"to_cstring",
+			"change_set",
+			"selectpuzzleset",
+			"worldorigin",
+			"debug",
+			"record.moves",
+			"set_puzzle",
+			"reset",
+			"restart",
+			"set_puzzle",
+			"new_record",
+			"record",
+			"moves",
+			"record.moves",
+			"record",
+			"selectpuzzleset",
+			"read_puz",
+			"split",
+			"strings.split",
+			"split",
+			"strings.split",
+			"split",
+			"get_current",
+			"getsetof",
+			"read_dir",
+			"absolute_path",
+			"snapshot",
+			"yascwall",
+			"yasctiles",
+			"read_puzzle_file",
+			"getset",
+			"get_set_title",
+			"set_of_sets",
+			"set_index",
+			"prepuzzle",
+			"offset",
+			"origin",
+			"camera",
+			"title",
+			"invalidfile",
+			"set",
+			"clear",
+			"debug_mem",
+			"delete",
+			"ckear",
+			"delete",
+			"main",
+			"getsetofsets",
+			"run_game",
+			"debug_mem",
+			"delete",
+			"debug_mem",
+			"run_game",
+			"debug_mem",
+			"debug",
+			"getsetofsets",
+			"fmt.",
+			"set_puzzle",
+			"record",
+			"record.move",
+			"record",
+			"record =",
+			"record",
+			"selectpuzz",
+			"selectpuzzleset",
+			"puzzle_from_pre",
+			".tiles",
+			"puzzle.tiles",
+			"puzzle",
+			"set_",
+			"clear_dyna",
+			"SelectPuzzleSet",
+			"set_of_sets"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"scrollbar_highlights": true,
+		"show_context": true,
+		"use_buffer2": true,
+		"use_gitignore": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 45.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.Debugger":
+	{
+		"height": 240.0
+	},
+	"output.Debugger Console":
+	{
+		"height": 148.0
+	},
+	"output.Debugger Terminal":
+	{
+		"height": 240.0
+	},
+	"output.Debugger Terminal(1)":
+	{
+		"height": 240.0
+	},
+	"output.LSP Log Panel":
+	{
+		"height": 120.0
+	},
+	"output.diagnostics":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 265.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups":
+	{
+		"height": 0.0
+	},
+	"output.mdpopups-dummy":
+	{
+		"height": 0.0
+	},
+	"output.project_environment_log":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 112.0
+	},
+	"pinned_build_system": "sublime_odin_template",
+	"project": "spritefont.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/htdocs/jarek/site/snippets/header.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 501.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/odin-projects/hyperdungeon/hyperdungeon.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"lsp_show_inlay_hints": false
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 254.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
