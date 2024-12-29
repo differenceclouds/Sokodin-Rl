@@ -1,12 +1,3 @@
-Draw font on FONT layer in white
-Move BASELINE, X-HEIGHT, and x-height
-layers up and down to preference.
-Export with only "GRID" "FONT"
-and "BASIC MASK" layers visible
-Disable "BASIC MASK" to support
-Latin-1 Supplement characters
-
-
 Author: Jordi Domènech
 Collection: Haikemono collection
 Email: jd.sokoban2020@gmail.com

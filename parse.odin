@@ -41,10 +41,10 @@ read_puzzle_file :: proc(filepath: string, allocator := context.temp_allocator) 
 		puzzleRead,
 	}
 
-    text, ok := os.read_entire_file(filepath, allocator)
-    if !ok {
-        panic(strings.concatenate({"Unable to read ", filepath}, allocator))
-    }
+	text, ok := os.read_entire_file(filepath, allocator)
+	if !ok {
+		panic(strings.concatenate({"Unable to read ", filepath}, allocator))
+	}
 
 	it := strings.concatenate({ string(text), "\n\n\n" }, allocator)
 

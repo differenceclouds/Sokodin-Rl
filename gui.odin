@@ -6,6 +6,7 @@ import "core:os"
 import "core:path/filepath"
 import "core:strings"
 import "core:slice"
+import tfd "../tinyfiledialogs"
 
 
 GuiData :: struct {
@@ -119,6 +120,10 @@ DrawGui :: proc(window: ^Window, data: ^GuiData, tilemap: Tilemap) {
 
 	//FROM RIGHT
 
+	if rl.GuiButton({r - unit, y + unit + pad, unit, unit}, "#1#") {
+		result := tfd.openFileDialog("Select Puzzle Set", "./levels/", {"*.txt", "*.sok"}, nil, false)
+		fmt.println(result)
+	}
 
 	if rl.GuiDropdownBox({r - unit*6, y, unit*6, unit}, sets_param, &set_result, edit_mode) {
 		edit_mode = !edit_mode

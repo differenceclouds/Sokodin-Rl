@@ -388,8 +388,9 @@ run_game :: proc() {
 	defer delete(record.moves)
 
 
+	level_directory := "./levels/more levels/JD_Sokoban_collections/BWR/"
 
-	set_of_sets := GetSetOfSets("levels")
+	set_of_sets := GetSetOfSets(level_directory)
 	defer delete(set_of_sets)
 
 	set_index :int
@@ -410,7 +411,8 @@ run_game :: proc() {
 		}
 	}
 
-	puzzle_set := SelectPuzzleSet("levels", set_of_sets[set_index])
+	puzzle_set := SelectPuzzleSet(level_directory, set_of_sets[set_index])
+	game.puzzle_index = game.puzzle_index %% len(puzzle_set)
 
 	puzzle := set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 	defer delete(puzzle_set)
@@ -707,7 +709,7 @@ run_game :: proc() {
 					game.puzzle_index = p + 1
 				}
 				delete(puzzle_set)
-				puzzle_set = SelectPuzzleSet("./levels/", set_of_sets[set_index])
+				puzzle_set = SelectPuzzleSet(level_directory, set_of_sets[set_index])
 				puzzle = set_puzzle(puzzle_set[game.puzzle_index], &world, &next_world, &player, &record)
 				world, next_world = next_world, world
 				UpdateWindowTitle(puzzle.title_bar, &window)

@@ -52,11 +52,12 @@ GetSetOfSets :: proc(directory: string) -> []string {
 
 read_directory :: proc(_dir: string) -> []os.File_Info {
 	start_dir := os.get_current_directory()
-	// fmt.println(start_dir)
+	fmt.println("current dir:",os.get_current_directory())
 	defer delete(start_dir)
 	defer os.set_current_directory(start_dir)
 
 	os.set_current_directory(_dir)
+	fmt.println("current dir:",os.get_current_directory())
 	cwd := os.get_current_directory()
 	defer delete(cwd)
 
@@ -79,7 +80,7 @@ read_directory :: proc(_dir: string) -> []os.File_Info {
 	}
 
 	// for fi in fis {
-	//     print_file_info(fi)
+	// 	print_file_info(fi)
 	// }
 
 
